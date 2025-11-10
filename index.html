@@ -1,583 +1,901 @@
 
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thi Trắc Nghiệm TH27.25 by NTQH</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Thi TOPIK 1 - Từ Vựng Hiện Đại</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
-    html {
-        font-family: "Poppins", sans-serif;
-    }
-
-    body {
-        background-color: #555454;
-        padding: 20px;
-        margin: 0;
-    }
-
-    h1 {
-        color: red;
-        text-align: center;
-    }
-
-    .quiz-container {
-        position: relative;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        padding: 20px;
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin: 0 auto;
-        max-width: 600px;
-    }
-
-    .question {
-        margin-bottom: 20px;
-    }
-
-    .answer {
-        display: block;
-        margin: 10px 0;
-        padding: 12px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        border-radius: 5px;
-        user-select: none;
-    }
-
-    .correct {
-        background-color: #4caf50 !important;
-        color: white !important;
-    }
-
-    .incorrect {
-        background-color: #f44336 !important;
-        color: white !important;
-    }
-
-    #result {
-        margin-top: 20px;
-        font-size: 1.2em;
-    }
-
-    .navigation {
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    button {
-        padding: 10px 15px;
-        margin: 0 5px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button.rounded {
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-
-    button.hidden {
-        display: none;
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    #title {
-        font-size: 18px;
-        font-weight: 500;
-    }
-
-    #thumb_question {
-        width: 100%;
-        height: auto;
-        max-height: 350px;
-        object-fit: contain;
-    }
-
-    #head {
-        display: flex;
-        align-items: center;
-    }
-
-    #head > #title {
-        margin-right: 15px;
-    }
-
-    #head > span {
-        flex: 1;
-        margin-left: auto;
-    }
-
-    #index-toggle-icon {
-        font-size: 20px;
-        color: #555;
-        cursor: pointer;
-        transition: color 0.3s;
-        margin-left: 10px;
-    }
-
-    #index-toggle-icon:hover {
-        color: #007bff;
-    }
-
-    #question-index-container {
-        display: none;
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        width: 300px;
-        max-height: 400px;
-        overflow-y: auto;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-        padding: 10px;
-    }
-
-    #question-index-container.show {
-        display: block;
-    }
-
-    .index-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-        gap: 8px;
-    }
-
-    .index-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border: 1px solid #ccc;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        font-weight: 500;
-        background-color: #f0f0f0;
-    }
-
-    .index-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .index-item.current {
-        border-color: #007bff;
-        background-color: #007bff;
-        color: white;
-        font-weight: 700;
-    }
-    .index-item.answered.correct {
-        background-color: #4caf50;
-        color: white;
-        border-color: #4caf50;
-    }
-    .index-item.answered.incorrect {
-        background-color: #f44336;
-        color: white;
-        border-color: #f44336;
-    }
-
-    /* === CSS DÀNH RIÊNG CHO MỤC LỤC TRÊN DI ĐỘNG (màn hình rộng tối đa 640px) === */
-    @media (max-width: 640px) {
-        /* Chỉ can thiệp vào mục lục câu hỏi, không thay đổi bất kỳ thành phần nào khác */
-        #question-index-container {
-            width: 90vw; /* Chiếm 90% chiều rộng màn hình */
-            max-width: 320px; /* Giới hạn chiều rộng tối đa, tránh quá to */
-            top: 70px; /* Điều chỉnh lại khoảng cách từ đỉnh */
-            
-            /* Căn giữa popup theo chiều ngang một cách chính xác */
-            left: 50%; 
-            right: auto;
-            transform: translateX(-50%); 
+        :root {
+            --primary-color: #4CAF50; /* Xanh lá */
+            --primary-dark: #388E3C;
+            --secondary-color: #2196F3; /* Xanh dương */
+            --accent-color: #FFC107; /* Vàng */
+            --text-color: #333;
+            --light-text-color: #666;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
         }
-    }
-</style>
-  </head>
 
-  <body>
-    <h1>Phần Mềm Thi Trắc Nghiệm</h1>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
 
-    <div class="quiz-container">
-      <div id="questionsContainer"></div>
-      <!-- Container mục lục sẽ được chèn vào đây bởi JS -->
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 95%;
+            max-width: 700px;
+            margin: 30px auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-      <div class="navigation">
-        <button id="shuffleButton" class="rounded">
-          <i style="pointer-events: none" class="fa-solid fa-shuffle"></i>
-        </button>
-        <button id="backButton">Quay lại</button>
-        <button id="nextButton">Tiếp theo</button>
-        <button id="againButton">Làm lại câu sai</button>
-      </div>
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
 
-      <div id="result"></div>
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .vocabulary-card {
+            background-color: #e8f5e9; /* Light green */
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Không ẩn tiếng Hàn nữa, chỉ ẩn tiếng Việt khi chưa hiện */
+        .vocabulary-card .korean-word {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+
+        .vocabulary-card .korean-word:hover {
+            color: var(--secondary-color);
+        }
+
+        .vocabulary-card .vietnamese-meaning {
+            font-size: 1.4em;
+            color: var(--light-text-color);
+            min-height: 1.4em; /* Prevent layout shift */
+            opacity: 0; /* Mặc định ẩn nghĩa tiếng Việt */
+            transform: translateY(10px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .vocabulary-card.show-meaning .vietnamese-meaning {
+            opacity: 1; /* Hiện nghĩa tiếng Việt khi có class show-meaning */
+            transform: translateY(0);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls button:hover {
+            background-color: #1976D2; /* Darker secondary */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        #showMeaningBtn { background-color: var(--primary-color); }
+        #showMeaningBtn:hover { background-color: var(--primary-dark); }
+        #resetBtn { background-color: #f44336; } /* Red for reset */
+        #resetBtn:hover { background-color: #d32f2f; }
+
+        .message {
+            margin-top: 25px;
+            font-weight: 600;
+            color: var(--light-text-color);
+            font-size: 1.1em;
+            min-height: 1.5em; /* Prevent layout shift */
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 30px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.4s ease-out;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .vocabulary-card .korean-word {
+                font-size: 2.8em;
+            }
+            .vocabulary-card .vietnamese-meaning {
+                font-size: 1.2em;
+            }
+            .controls button {
+                width: calc(50% - 15px); /* Two buttons per row */
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Luyện Từ Vựng TOPIK 1 <p style="color: red;font-size: 20px;font-weight: 900;">by Nguyễn Thế Quang Huy</p></h1>
+        <div class="vocabulary-card" id="vocabularyCard">
+            <div class="korean-word" id="koreanWord" title="Nhấn để nghe"></div>
+            <div class="vietnamese-meaning" id="vietnameseMeaning"></div>
+        </div>
+        <div class="controls">
+            <button id="showMeaningBtn">Hiện Nghĩa</button>
+            <button id="readWordBtn">Nghe</button>
+            <button id="nextWordBtn">Từ Tiếp Theo</button>
+            <button id="prevWordBtn">Từ Trước</button>
+            <button id="resetBtn">Làm Lại</button>
+        </div>
+        <div class="message" id="message"></div>
+        <div class="progress-bar-container">
+            <div class="progress" id="progressBar"></div>
+        </div>
     </div>
 
-    <script type="module">
-      // Giả sử đây là file data.js của bạn
-      // THAY BẰNG DÒNG NÀY
-        import questions from "./data.js";
-
-      let selectList = [];
-      let incorrectList = [];
-      let currentQuestionIndex = 0;
-      let questionList = questions.question_2.origin_question;
-      let isShuffle = false;
-      let makeAgainMode = false;
-      let autoPlayTimeout = null;
-
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i >= 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
-
-      const quizContainer = document.querySelector(".quiz-container");
-      const questionContainer = document.getElementById("questionsContainer");
-      const shuffleBtn = document.getElementById("shuffleButton");
-      const nextBtn = document.getElementById("nextButton");
-      const backBtn = document.getElementById("backButton");
-      const againBtn = document.getElementById("againButton");
-
-      // === PHẦN MỚI: TẠO CÁC PHẦN TỬ CHO MỤC LỤC ===
-      const indexToggleIcon = document.createElement("i");
-      indexToggleIcon.id = "index-toggle-icon";
-      indexToggleIcon.className = "fa-solid fa-list-ul";
-
-      const questionIndexContainer = document.createElement("div");
-      questionIndexContainer.id = "question-index-container";
-      const indexGrid = document.createElement("div");
-      indexGrid.className = "index-grid";
-      questionIndexContainer.appendChild(indexGrid);
-      quizContainer.appendChild(questionIndexContainer); // Chèn vào DOM
-      // === KẾT THÚC PHẦN MỚI ===
-
-      window.addEventListener("keydown", (e) => {
-        switch (e.keyCode) {
-          case 39: handleNextQuestion(nextBtn, makeAgainMode); break;
-          case 37: handleBackQuestion(backBtn); break;
-        }
-      });
-
-      // === PHẦN MỚI: SỰ KIỆN CHO ICON VÀ ĐÓNG MỤC LỤC ===
-      indexToggleIcon.addEventListener("click", (e) => {
-        e.stopPropagation(); // Ngăn sự kiện click lan ra document
-        questionIndexContainer.classList.toggle("show");
-      });
-
-      document.addEventListener("click", (e) => {
-        // Nếu click ra ngoài mục lục và ngoài icon, thì ẩn mục lục đi
-        if (
-          !questionIndexContainer.contains(e.target) &&
-          !indexToggleIcon.contains(e.target)
-        ) {
-          questionIndexContainer.classList.remove("show");
-        }
-      });
-      // === KẾT THÚC PHẦN MỚI ===
-
-
-      const handleShuffleArray = (e) => {
-        isShuffle = true;
-        questionContainer.innerHTML = "";
-        questionList = shuffleArray([...questions.question_2.origin_question]); // Tạo bản sao để shuffle
-        currentQuestionIndex = 0; // Reset về câu đầu
-        selectList = []; // Xóa các câu đã chọn
-        incorrectList = []; // Xóa các câu sai
-        displayQuestion(questionList[currentQuestionIndex]);
-        e.target.classList.add("hidden");
-        e.target.disabled = true;
-      };
-
-      const handleMakeIncorrect = (ques) => {
-        incorrectList = [
-          ...incorrectList,
-          ...ques.filter((sl) => !sl?.isCorrect),
+    <script>
+        const vocabulary = [
+            { korean: "안녕하세요", vietnamese: "Xin chào" },
+            { korean: "감사합니다", vietnamese: "Cảm ơn" },
+            { korean: "네", vietnamese: "Vâng, Có" },
+            { korean: "아니요", vietnamese: "Không" },
+            { korean: "죄송합니다", vietnamese: "Xin lỗi" },
+            { korean: "안녕히 계세요", vietnamese: "Tạm biệt (người ở lại)" },
+            { korean: "안녕히 가세요", vietnamese: "Tạm biệt (người đi)" },
+            { korean: "밥", vietnamese: "Cơm" },
+            { korean: "물", vietnamese: "Nước" },
+            { korean: "학교", vietnamese: "Trường học" },
+            { korean: "학생", vietnamese: "Học sinh" },
+            { korean: "선생님", vietnamese: "Giáo viên" },
+            { korean: "친구", vietnamese: "Bạn bè" },
+            { korean: "책", vietnamese: "Sách" },
+            { korean: "연필", vietnamese: "Bút chì" },
+            { korean: "사과", vietnamese: "Táo" },
+            { korean: "돈", vietnamese: "Tiền" },
+            { korean: "집", vietnamese: "Nhà" },
+            { korean: "가족", vietnamese: "Gia đình" },
+            { korean: "사랑해요", vietnamese: "Anh/Em yêu em/anh" },
+            { korean: "아버지", vietnamese: "Bố" },
+            { korean: "어머니", vietnamese: "Mẹ" },
+            { korean: "형", vietnamese: "Anh trai (em trai gọi)" },
+            { korean: "오빠", vietnamese: "Anh trai (em gái gọi)" },
+            { korean: "누나", vietnamese: "Chị gái (em trai gọi)" },
+            { korean: "언니", vietnamese: "Chị gái (em gái gọi)" },
+            { korean: "동생", vietnamese: "Em" },
+            { korean: "할아버지", vietnamese: "Ông" },
+            { korean: "할머니", vietnamese: "Bà" },
+            { korean: "남편", vietnamese: "Chồng" },
+            { korean: "아내", vietnamese: "Vợ" },
+            { korean: "아들", vietnamese: "Con trai" },
+            { korean: "딸", vietnamese: "Con gái" },
+            { korean: "이름", vietnamese: "Tên" },
+            { korean: "나라", vietnamese: "Quốc gia" },
+            { korean: "한국", vietnamese: "Hàn Quốc" },
+            { korean: "베트남", vietnamese: "Việt Nam" },
+            { korean: "미국", vietnamese: "Mỹ" },
+            { korean: "중국", vietnamese: "Trung Quốc" },
+            { korean: "일본", vietnamese: "Nhật Bản" },
+            { korean: "영어", vietnamese: "Tiếng Anh" },
+            { korean: "한국어", vietnamese: "Tiếng Hàn" },
+            { korean: "베트남어", vietnamese: "Tiếng Việt" },
+            { korean: "직업", vietnamese: "Nghề nghiệp" },
+            { korean: "회사원", vietnamese: "Nhân viên công ty" },
+            { korean: "의사", vietnamese: "Bác sĩ" },
+            { korean: "경찰", vietnamese: "Cảnh sát" },
+            { korean: "요리사", vietnamese: "Đầu bếp" },
+            { korean: "가수", vietnamese: "Ca sĩ" },
+            { korean: "배우", vietnamese: "Diễn viên" },
+            { korean: "학생", vietnamese: "Học sinh/Sinh viên" },
+            { korean: "회사", vietnamese: "Công ty" },
+            { korean: "대학교", vietnamese: "Đại học" },
+            { korean: "집", vietnamese: "Nhà" },
+            { korean: "방", vietnamese: "Phòng" },
+            { korean: "화장실", vietnamese: "Nhà vệ sinh" },
+            { korean: "부엌", vietnamese: "Bếp" },
+            { korean: "거실", vietnamese: "Phòng khách" },
+            { korean: "침대", vietnamese: "Giường" },
+            { korean: "의자", vietnamese: "Ghế" },
+            { korean: "책상", vietnamese: "Bàn học/làm việc" },
+            { korean: "창문", vietnamese: "Cửa sổ" },
+            { korean: "문", vietnamese: "Cửa" },
+            { korean: "텔레비전", vietnamese: "Ti vi" },
+            { korean: "냉장고", vietnamese: "Tủ lạnh" },
+            { korean: "세탁기", vietnamese: "Máy giặt" },
+            { korean: "전화", vietnamese: "Điện thoại" },
+            { korean: "컴퓨터", vietnamese: "Máy tính" },
+            { korean: "옷", vietnamese: "Quần áo" },
+            { korean: "신발", vietnamese: "Giày" },
+            { korean: "모자", vietnamese: "Mũ" },
+            { korean: "가방", vietnamese: "Túi xách" },
+            { korean: "안경", vietnamese: "Kính" },
+            { korean: "시계", vietnamese: "Đồng hồ" },
+            { korean: "음식", vietnamese: "Thức ăn" },
+            { korean: "과일", vietnamese: "Trái cây" },
+            { korean: "야채", vietnamese: "Rau củ" },
+            { korean: "고기", vietnamese: "Thịt" },
+            { korean: "생선", vietnamese: "Cá" },
+            { korean: "우유", vietnamese: "Sữa" },
+            { korean: "빵", vietnamese: "Bánh mì" },
+            { korean: "커피", vietnamese: "Cà phê" },
+            { korean: "차", vietnamese: "Trà" },
+            { korean: "주스", vietnamese: "Nước ép" },
+            { korean: "맥주", vietnamese: "Bia" },
+            { korean: "술", vietnamese: "Rượu" },
+            { korean: "시간", vietnamese: "Thời gian" },
+            { korean: "오늘", vietnamese: "Hôm nay" },
+            { korean: "어제", vietnamese: "Hôm qua" },
+            { korean: "내일", vietnamese: "Ngày mai" },
+            { korean: "아침", vietnamese: "Buổi sáng" },
+            { korean: "점심", vietnamese: "Buổi trưa" },
+            { korean: "저녁", vietnamese: "Buổi tối" },
+            { korean: "새벽", vietnamese: "Rạng sáng" },
+            { korean: "밤", vietnamese: "Đêm" },
+            { korean: "월요일", vietnamese: "Thứ Hai" },
+            { korean: "화요일", vietnamese: "Thứ Ba" },
+            { korean: "수요일", vietnamese: "Thứ Tư" },
+            { korean: "목요일", vietnamese: "Thứ Năm" },
+            { korean: "금요일", vietnamese: "Thứ Sáu" },
+            { korean: "토요일", vietnamese: "Thứ Bảy" },
+            { korean: "일요일", vietnamese: "Chủ Nhật" },
+            { korean: "주말", vietnamese: "Cuối tuần" },
+            { korean: "년", vietnamese: "Năm" },
+            { korean: "월", vietnamese: "Tháng" },
+            { korean: "일", vietnamese: "Ngày" },
+            { korean: "시", vietnamese: "Giờ" },
+            { korean: "분", vietnamese: "Phút" },
+            { korean: "초", vietnamese: "Giây" },
+            { korean: "봄", vietnamese: "Mùa xuân" },
+            { korean: "여름", vietnamese: "Mùa hè" },
+            { korean: "가을", vietnamese: "Mùa thu" },
+            { korean: "겨울", vietnamese: "Mùa đông" },
+            { korean: "날씨", vietnamese: "Thời tiết" },
+            { korean: "비", vietnamese: "Mưa" },
+            { korean: "눈", vietnamese: "Tuyết" },
+            { korean: "바람", vietnamese: "Gió" },
+            { korean: "구름", vietnamese: "Mây" },
+            { korean: "해", vietnamese: "Mặt trời" },
+            { korean: "달", vietnamese: "Mặt trăng" },
+            { korean: "별", vietnamese: "Ngôi sao" },
+            { korean: "덥다", vietnamese: "Nóng" },
+            { korean: "춥다", vietnamese: "Lạnh" },
+            { korean: "따뜻하다", vietnamese: "Ấm áp" },
+            { korean: "시원하다", vietnamese: "Mát mẻ" },
+            { korean: "맑다", vietnamese: "Trong xanh, quang đãng" },
+            { korean: "흐리다", vietnamese: "Âm u, nhiều mây" },
+            { korean: "오다", vietnamese: "Đến" },
+            { korean: "가다", vietnamese: "Đi" },
+            { korean: "먹다", vietnamese: "Ăn" },
+            { korean: "마시다", vietnamese: "Uống" },
+            { korean: "자다", vietnamese: "Ngủ" },
+            { korean: "일어나다", vietnamese: "Thức dậy" },
+            { korean: "읽다", vietnamese: "Đọc" },
+            { korean: "쓰다", vietnamese: "Viết" },
+            { korean: "공부하다", vietnamese: "Học" },
+            { korean: "운동하다", vietnamese: "Tập thể dục" },
+            { korean: "일하다", vietnamese: "Làm việc" },
+            { korean: "이야기하다", vietnamese: "Nói chuyện" },
+            { korean: "듣다", vietnamese: "Nghe" },
+            { korean: "보다", vietnamese: "Nhìn, xem" },
+            { korean: "만나다", vietnamese: "Gặp gỡ" },
+            { korean: "하다", vietnamese: "Làm" },
+            { korean: "좋아하다", vietnamese: "Thích" },
+            { korean: "싫어하다", vietnamese: "Ghét" },
+            { korean: "있다", vietnamese: "Có, ở" },
+            { korean: "없다", vietnamese: "Không có" },
+            { korean: "많다", vietnamese: "Nhiều" },
+            { korean: "적다", vietnamese: "Ít" },
+            { korean: "크다", vietnamese: "Lớn" },
+            { korean: "작다", vietnamese: "Nhỏ" },
+            { korean: "길다", vietnamese: "Dài" },
+            { korean: "짧다", vietnamese: "Ngắn" },
+            { korean: "높다", vietnamese: "Cao" },
+            { korean: "낮다", vietnamese: "Thấp" },
+            { korean: "빠르다", vietnamese: "Nhanh" },
+            { korean: "느리다", vietnamese: "Chậm" },
+            { korean: "예쁘다", vietnamese: "Đẹp (người, vật)" },
+            { korean: "아름답다", vietnamese: "Đẹp (cảnh quan, nghệ thuật)" },
+            { korean: "멋있다", vietnamese: "Ngầu, đẹp trai" },
+            { korean: "귀엽다", vietnamese: "Dễ thương" },
+            { korean: "착하다", vietnamese: "Hiền lành" },
+            { korean: "똑똑하다", vietnamese: "Thông minh" },
+            { korean: "재미있다", vietnamese: "Thú vị" },
+            { korean: "재미없다", vietnamese: "Nhàm chán" },
+            { korean: "힘들다", vietnamese: "Vất vả, khó khăn" },
+            { korean: "쉽다", vietnamese: "Dễ" },
+            { korean: "어렵다", vietnamese: "Khó" },
+            { korean: "비싸다", vietnamese: "Đắt" },
+            { korean: "싸다", vietnamese: "Rẻ" },
+            { korean: "멀다", vietnamese: "Xa" },
+            { korean: "가깝다", vietnamese: "Gần" },
+            { korean: "괜찮다", vietnamese: "Ổn, được" },
+            { korean: "좋다", vietnamese: "Tốt" },
+            { korean: "나쁘다", vietnamese: "Xấu" },
+            { korean: "행복하다", vietnamese: "Hạnh phúc" },
+            { korean: "슬프다", vietnamese: "Buồn" },
+            { korean: "기쁘다", vietnamese: "Vui vẻ" },
+            { korean: "피곤하다", vietnamese: "Mệt mỏi" },
+            { korean: "졸리다", vietnamese: "Buồn ngủ" },
+            { korean: "배고프다", vietnamese: "Đói bụng" },
+            { korean: "배부르다", vietnamese: "No bụng" },
+            { korean: "목마르다", vietnamese: "Khát nước" },
+            { korean: "아프다", vietnamese: "Đau, ốm" },
+            { korean: "건강하다", vietnamese: "Khỏe mạnh" },
+            { korean: "있다", vietnamese: "Có" },
+            { korean: "없다", vietnamese: "Không có" },
+            { korean: "안", vietnamese: "Không (phủ định động từ/tính từ)" },
+            { korean: "못", vietnamese: "Không thể (bất khả thi)" },
+            { korean: "그리고", vietnamese: "Và, rồi" },
+            { korean: "하지만", vietnamese: "Nhưng" },
+            { korean: "그래서", vietnamese: "Vì vậy, cho nên" },
+            { korean: "그러면", vietnamese: "Nếu vậy thì" },
+            { korean: "어서 오세요", vietnamese: "Mời vào, chào mừng" },
+            { korean: "천만에요", vietnamese: "Không có gì (đáp lại lời cảm ơn)" },
+            { korean: "실례합니다", vietnamese: "Xin lỗi (khi làm phiền)" },
+            { korean: "도와주세요", vietnamese: "Hãy giúp đỡ" },
+            { korean: "미안합니다", vietnamese: "Xin lỗi (tương tự 죄송합니다)" },
+            { korean: "축하합니다", vietnamese: "Chúc mừng" },
+            { korean: "생일", vietnamese: "Sinh nhật" },
+            { korean: "선물", vietnamese: "Quà tặng" },
+            { korean: "사진", vietnamese: "Ảnh" },
+            { korean: "영화", vietnamese: "Phim" },
+            { korean: "음악", vietnamese: "Âm nhạc" },
+            { korean: "운동", vietnamese: "Thể thao, vận động" },
+            { korean: "여행", vietnamese: "Du lịch" },
+            { korean: "쇼핑", vietnamese: "Mua sắm" },
+            { korean: "게임", vietnamese: "Trò chơi" },
+            { korean: "친구", vietnamese: "Bạn bè" },
+            { korean: "가족", vietnamese: "Gia đình" },
+            { korean: "아침 식사", vietnamese: "Bữa sáng" },
+            { korean: "점심 식사", vietnamese: "Bữa trưa" },
+            { korean: "저녁 식사", vietnamese: "Bữa tối" },
+            { korean: "시장", vietnamese: "Chợ" },
+            { korean: "백화점", vietnamese: "Cửa hàng bách hóa" },
+            { korean: "병원", vietnamese: "Bệnh viện" },
+            { korean: "약국", vietnamese: "Hiệu thuốc" },
+            { korean: "은행", vietnamese: "Ngân hàng" },
+            { korean: "우체국", vietnamese: "Bưu điện" },
+            { korean: "공항", vietnamese: "Sân bay" },
+            { korean: "기차역", vietnamese: "Nhà ga xe lửa" },
+            { korean: "버스 정류장", vietnamese: "Trạm xe buýt" },
+            { korean: "택시", vietnamese: "Taxi" },
+            { korean: "지하철", vietnamese: "Tàu điện ngầm" },
+            { korean: "비행기", vietnamese: "Máy bay" },
+            { korean: "배", vietnamese: "Thuyền, tàu" },
+            { korean: "자전거", vietnamese: "Xe đạp" },
+            { korean: "자동차", vietnamese: "Ô tô" },
+            { korean: "학교", vietnamese: "Trường học" },
+            { korean: "교실", vietnamese: "Phòng học" },
+            { korean: "선생님", vietnamese: "Giáo viên" },
+            { korean: "학생", vietnamese: "Học sinh" },
+            { korean: "숙제", vietnamese: "Bài tập về nhà" },
+            { korean: "시험", vietnamese: "Bài kiểm tra, thi" },
+            { korean: "공책", vietnamese: "Vở" },
+            { korean: "사전", vietnamese: "Từ điển" },
+            { korean: "볼펜", vietnamese: "Bút bi" },
+            { korean: "지우개", vietnamese: "Tẩy" },
+            { korean: "필통", vietnamese: "Hộp bút" },
+            { korean: "달력", vietnamese: "Lịch" },
+            { korean: "지도", vietnamese: "Bản đồ" },
+            { korean: "신문", vietnamese: "Báo" },
+            { korean: "잡지", vietnamese: "Tạp chí" },
+            { korean: "책", vietnamese: "Sách" },
+            { korean: "도서관", vietnamese: "Thư viện" },
+            { korean: "사진기", vietnamese: "Máy ảnh" },
+            { korean: "라디오", vietnamese: "Đài radio" },
+            { korean: "세수하다", vietnamese: "Rửa mặt" },
+            { korean: "이 닦다", vietnamese: "Đánh răng" },
+            { korean: "샤워하다", vietnamese: "Tắm vòi sen" },
+            { korean: "옷을 입다", vietnamese: "Mặc quần áo" },
+            { korean: "벗다", vietnamese: "Cởi (quần áo)" },
+            { korean: "씻다", vietnamese: "Rửa" },
+            { korean: "만들다", vietnamese: "Làm, tạo ra" },
+            { korean: "요리하다", vietnamese: "Nấu ăn" },
+            { korean: "청소하다", vietnamese: "Dọn dẹp" },
+            { korean: "빨래하다", vietnamese: "Giặt giũ" },
+            { korean: "전화하다", vietnamese: "Gọi điện thoại" },
+            { korean: "메시지를 보내다", vietnamese: "Gửi tin nhắn" },
+            { korean: "걷다", vietnamese: "Đi bộ" },
+            { korean: "뛰다", vietnamese: "Chạy" },
+            { korean: "춤추다", vietnamese: "Nhảy múa" },
+            { korean: "노래하다", vietnamese: "Hát" },
+            { korean: "그리다", vietnamese: "Vẽ" },
+            { korean: "배우다", vietnamese: "Học" },
+            { korean: "가르치다", vietnamese: "Dạy" },
+            { korean: "웃다", vietnamese: "Cười" },
+            { korean: "울다", vietnamese: "Khóc" },
+            { korean: "이야기하다", vietnamese: "Kể chuyện, nói chuyện" },
+            { korean: "말하다", vietnamese: "Nói" },
+            { korean: "묻다", vietnamese: "Hỏi" },
+            { korean: "대답하다", vietnamese: "Trả lời" },
+            { korean: "주다", vietnamese: "Cho" },
+            { korean: "받다", vietnamese: "Nhận" },
+            { korean: "빌리다", vietnamese: "Mượn" },
+            { korean: "빌려주다", vietnamese: "Cho mượn" },
+            { korean: "쓰다", vietnamese: "Sử dụng" },
+            { korean: "가지다", vietnamese: "Cầm, mang, có" },
+            { korean: "놓다", vietnamese: "Đặt, để" },
+            { korean: "앉다", vietnamese: "Ngồi" },
+            { korean: "서다", vietnamese: "Đứng" },
+            { korean: "열다", vietnamese: "Mở" },
+            { korean: "닫다", vietnamese: "Đóng" },
+            { korean: "켜다", vietnamese: "Bật (điện)" },
+            { korean: "끄다", vietnamese: "Tắt (điện)" },
+            { korean: "들어가다", vietnamese: "Đi vào" },
+            { korean: "나가다", vietnamese: "Đi ra" },
+            { korean: "올라가다", vietnamese: "Đi lên" },
+            { korean: "내려가다", vietnamese: "Đi xuống" },
+            { korean: "오다", vietnamese: "Đến" },
+            { korean: "가다", vietnamese: "Đi" },
+            { korean: "오르다", vietnamese: "Leo lên, tăng lên" },
+            { korean: "내리다", vietnamese: "Xuống, giảm xuống" },
+            { korean: "만들다", vietnamese: "Chế tạo, làm ra" },
+            { korean: "찾다", vietnamese: "Tìm kiếm, lấy" },
+            { korean: "알다", vietnamese: "Biết" },
+            { korean: "모르다", vietnamese: "Không biết" },
+            { korean: "살다", vietnamese: "Sống" },
+            { korean: "죽다", vietnamese: "Chết" },
+            { korean: "태어나다", vietnamese: "Sinh ra" },
+            { korean: "만나다", vietnamese: "Gặp gỡ" },
+            { korean: "헤어지다", vietnamese: "Chia tay" },
+            { korean: "결혼하다", vietnamese: "Kết hôn" },
+            { korean: "졸업하다", vietnamese: "Tốt nghiệp" },
+            { korean: "입학하다", vietnamese: "Nhập học" },
+            { korean: "시작하다", vietnamese: "Bắt đầu" },
+            { korean: "끝나다", vietnamese: "Kết thúc" },
+            { korean: "준비하다", vietnamese: "Chuẩn bị" },
+            { korean: "정리하다", vietnamese: "Sắp xếp, dọn dẹp" },
+            { korean: "빨리", vietnamese: "Nhanh chóng" },
+            { korean: "천천히", vietnamese: "Chậm rãi" },
+            { korean: "매일", vietnamese: "Mỗi ngày" },
+            { korean: "항상", vietnamese: "Luôn luôn" },
+            { korean: "자주", vietnamese: "Thường xuyên" },
+            { korean: "가끔", vietnamese: "Thỉnh thoảng" },
+            { korean: "별로", vietnamese: "Không... lắm" },
+            { korean: "전혀", vietnamese: "Hoàn toàn không" },
+            { korean: "아주", vietnamese: "Rất" },
+            { korean: "정말", vietnamese: "Thật sự" },
+            { korean: "너무", vietnamese: "Quá (thường mang nghĩa tiêu cực)" },
+            { korean: "더", vietnamese: "Hơn nữa" },
+            { korean: "덜", vietnamese: "Ít hơn" },
+            { korean: "같이", vietnamese: "Cùng nhau" },
+            { korean: "혼자", vietnamese: "Một mình" },
+            { korean: "여기", vietnamese: "Ở đây" },
+            { korean: "저기", vietnamese: "Ở đằng kia" },
+            { korean: "거기", vietnamese: "Ở đó" },
+            { korean: "어디", vietnamese: "Ở đâu" },
+            { korean: "위", vietnamese: "Trên" },
+            { korean: "아래", vietnamese: "Dưới" },
+            { korean: "앞", vietnamese: "Trước" },
+            { korean: "뒤", vietnamese: "Sau" },
+            { korean: "안", vietnamese: "Trong" },
+            { korean: "밖", vietnamese: "Ngoài" },
+            { korean: "오른쪽", vietnamese: "Bên phải" },
+            { korean: "왼쪽", vietnamese: "Bên trái" },
+            { korean: "옆", vietnamese: "Bên cạnh" },
+            { korean: "사이", vietnamese: "Giữa" },
+            { korean: "하나", vietnamese: "Một" },
+            { korean: "둘", vietnamese: "Hai" },
+            { korean: "셋", vietnamese: "Ba" },
+            { korean: "넷", vietnamese: "Bốn" },
+            { korean: "다섯", vietnamese: "Năm" },
+            { korean: "여섯", vietnamese: "Sáu" },
+            { korean: "일곱", vietnamese: "Bảy" },
+            { korean: "여덟", vietnamese: "Tám" },
+            { korean: "아홉", vietnamese: "Chín" },
+            { korean: "열", vietnamese: "Mười" },
+            { korean: "스물", vietnamese: "Hai mươi" },
+            { korean: "서른", vietnamese: "Ba mươi" },
+            { korean: "마흔", vietnamese: "Bốn mươi" },
+            { korean: "쉰", vietnamese: "Năm mươi" },
+            { korean: "영/공", vietnamese: "Không" },
+            { korean: "일", vietnamese: "Một (Hán-Hàn)" },
+            { korean: "이", vietnamese: "Hai (Hán-Hàn)" },
+            { korean: "삼", vietnamese: "Ba (Hán-Hàn)" },
+            { korean: "사", vietnamese: "Bốn (Hán-Hàn)" },
+            { korean: "오", vietnamese: "Năm (Hán-Hàn)" },
+            { korean: "육", vietnamese: "Sáu (Hán-Hàn)" },
+            { korean: "칠", vietnamese: "Bảy (Hán-Hàn)" },
+            { korean: "팔", vietnamese: "Tám (Hán-Hàn)" },
+            { korean: "구", vietnamese: "Chín (Hán-Hàn)" },
+            { korean: "십", vietnamese: "Mười (Hán-Hàn)" },
+            { korean: "백", vietnamese: "Một trăm" },
+            { korean: "천", vietnamese: "Một nghìn" },
+            { korean: "만", vietnamese: "Một vạn (mười nghìn)" },
+            { korean: "수요일", vietnamese: "Thứ Tư" },
+            { korean: "목요일", vietnamese: "Thứ Năm" },
+            { korean: "금요일", vietnamese: "Thứ Sáu" },
+            { korean: "토요일", vietnamese: "Thứ Bảy" },
+            { korean: "일요일", vietnamese: "Chủ Nhật" },
+            { korean: "주말", vietnamese: "Cuối tuần" },
+            { korean: "월", vietnamese: "Tháng" },
+            { korean: "일", vietnamese: "Ngày" },
+            { korean: "년", vietnamese: "Năm" },
+            { korean: "오늘", vietnamese: "Hôm nay" },
+            { korean: "어제", vietnamese: "Hôm qua" },
+            { korean: "내일", vietnamese: "Ngày mai" },
+            { korean: "지금", vietnamese: "Bây giờ" },
+            { korean: "아침", vietnamese: "Buổi sáng" },
+            { korean: "점심", vietnamese: "Buổi trưa" },
+            { korean: "저녁", vietnamese: "Buổi tối" },
+            { korean: "밤", vietnamese: "Đêm" },
+            { korean: "새벽", vietnamese: "Rạng sáng" },
+            { korean: "계절", vietnamese: "Mùa" },
+            { korean: "봄", vietnamese: "Mùa xuân" },
+            { korean: "여름", vietnamese: "Mùa hè" },
+            { korean: "가을", vietnamese: "Mùa thu" },
+            { korean: "겨울", vietnamese: "Mùa đông" },
+            { korean: "날씨", vietnamese: "Thời tiết" },
+            { korean: "비", vietnamese: "Mưa" },
+            { korean: "눈", vietnamese: "Tuyết" },
+            { korean: "바람", vietnamese: "Gió" },
+            { korean: "구름", vietnamese: "Mây" },
+            { korean: "안개", vietnamese: "Sương mù" },
+            { korean: "하늘", vietnamese: "Bầu trời" },
+            { korean: "해", vietnamese: "Mặt trời" },
+            { korean: "달", vietnamese: "Mặt trăng" },
+            { korean: "별", vietnamese: "Ngôi sao" },
+            { korean: "덥다", vietnamese: "Nóng" },
+            { korean: "춥다", vietnamese: "Lạnh" },
+            { korean: "따뜻하다", vietnamese: "Ấm áp" },
+            { korean: "시원하다", vietnamese: "Mát mẻ" },
+            { korean: "맑다", vietnamese: "Trong xanh" },
+            { korean: "흐리다", vietnamese: "Âm u" },
+            { korean: "눈이 오다", vietnamese: "Tuyết rơi" },
+            { korean: "비가 오다", vietnamese: "Trời mưa" },
+            { korean: "바람이 불다", vietnamese: "Gió thổi" },
+            { korean: "시간", vietnamese: "Thời gian" },
+            { korean: "분", vietnamese: "Phút" },
+            { korean: "초", vietnamese: "Giây" },
+            { korean: "아침 식사", vietnamese: "Bữa sáng" },
+            { korean: "점심 식사", vietnamese: "Bữa trưa" },
+            { korean: "저녁 식사", vietnamese: "Bữa tối" },
+            { korean: "식사하다", vietnamese: "Ăn cơm" },
+            { korean: "간식", vietnamese: "Đồ ăn vặt" },
+            { korean: "음료수", vietnamese: "Đồ uống" },
+            { korean: "커피", vietnamese: "Cà phê" },
+            { korean: "차", vietnamese: "Trà" },
+            { korean: "물", vietnamese: "Nước" },
+            { korean: "밥", vietnamese: "Cơm" },
+            { korean: "국", vietnamese: "Canh" },
+            { korean: "반찬", vietnamese: "Món ăn kèm" },
+            { korean: "김치", vietnamese: "Kim chi" },
+            { korean: "불고기", vietnamese: "Thịt bò nướng Bulgogi" },
+            { korean: "비빔밥", vietnamese: "Cơm trộn Bibimbap" },
+            { korean: "삼겹살", vietnamese: "Thịt ba chỉ nướng" },
+            { korean: "냉면", vietnamese: "Mì lạnh" },
+            { korean: "찌개", vietnamese: "Món hầm" },
+            { korean: "과일", vietnamese: "Trái cây" },
+            { korean: "사과", vietnamese: "Táo" },
+            { korean: "바나나", vietnamese: "Chuối" },
+            { korean: "오렌지", vietnamese: "Cam" },
+            { korean: "수박", vietnamese: "Dưa hấu" },
+            { korean: "딸기", vietnamese: "Dâu tây" },
+            { korean: "포도", vietnamese: "Nho" },
+            { korean: "귤", vietnamese: "Quýt" },
+            { korean: "빵", vietnamese: "Bánh mì" },
+            { korean: "케이크", vietnamese: "Bánh kem" },
+            { korean: "과자", vietnamese: "Bánh kẹo" },
+            { korean: "사탕", vietnamese: "Kẹo" },
+            { korean: "초콜릿", vietnamese: "Sô cô la" },
+            { korean: "돈", vietnamese: "Tiền" },
+            { korean: "값", vietnamese: "Giá cả" },
+            { korean: "물건", vietnamese: "Đồ vật" },
+            { korean: "가게", vietnamese: "Cửa hàng" },
+            { korean: "시장", vietnamese: "Chợ" },
+            { korean: "백화점", vietnamese: "Trung tâm thương mại" },
+            { korean: "편의점", vietnamese: "Cửa hàng tiện lợi" },
+            { korean: "식당", vietnamese: "Nhà hàng" },
+            { korean: "카페", vietnamese: "Quán cà phê" },
+            { korean: "서점", vietnamese: "Hiệu sách" },
+            { korean: "옷가게", vietnamese: "Cửa hàng quần áo" },
+            { korean: "신발가게", vietnamese: "Cửa hàng giày" },
+            { korean: "모자", vietnamese: "Mũ" },
+            { korean: "옷", vietnamese: "Quần áo" },
+            { korean: "바지", vietnamese: "Quần" },
+            { korean: "치마", vietnamese: "Váy" },
+            { korean: "티셔츠", vietnamese: "Áo thun" },
+            { korean: "와이셔츠", vietnamese: "Áo sơ mi" },
+            { korean: "코트", vietnamese: "Áo khoác" },
+            { korean: "양말", vietnamese: "Tất" },
+            { korean: "장갑", vietnamese: "Găng tay" },
+            { korean: "가방", vietnamese: "Túi xách" },
+            { korean: "지갑", vietnamese: "Ví" },
+            { korean: "안경", vietnamese: "Kính" },
+            { korean: "시계", vietnamese: "Đồng hồ" },
+            { korean: "목걸이", vietnamese: "Vòng cổ" },
+            { korean: "귀걸이", vietnamese: "Bông tai" },
+            { korean: "반지", vietnamese: "Nhẫn" },
+            { korean: "팔찌", vietnamese: "Vòng tay" },
+            { korean: "색깔", vietnamese: "Màu sắc" },
+            { korean: "빨간색", vietnamese: "Màu đỏ" },
+            { korean: "파란색", vietnamese: "Màu xanh dương" },
+            { korean: "노란색", vietnamese: "Màu vàng" },
+            { korean: "초록색", vietnamese: "Màu xanh lá" },
+            { korean: "하얀색", vietnamese: "Màu trắng" },
+            { korean: "검은색", vietnamese: "Màu đen" },
+            { korean: "갈색", vietnamese: "Màu nâu" },
+            { korean: "회색", vietnamese: "Màu xám" },
+            { korean: "분홍색", vietnamese: "Màu hồng" },
+            { korean: "보라색", vietnamese: "Màu tím" },
+            { korean: "주황색", vietnamese: "Màu cam" },
+            { korean: "다리", vietnamese: "Chân, cầu" },
+            { korean: "손", vietnamese: "Tay" },
+            { korean: "발", vietnamese: "Bàn chân" },
+            { korean: "얼굴", vietnamese: "Mặt" },
+            { korean: "눈", vietnamese: "Mắt" },
+            { korean: "코", vietnamese: "Mũi" },
+            { korean: "입", vietnamese: "Miệng" },
+            { korean: "머리", vietnamese: "Đầu, tóc" },
+            { korean: "귀", vietnamese: "Tai" },
+            { korean: "이", vietnamese: "Răng" },
+            { korean: "배", vietnamese: "Bụng" },
+            { korean: "등", vietnamese: "Lưng" },
+            { korean: "어깨", vietnamese: "Vai" },
+            { korean: "팔", vietnamese: "Cánh tay" },
+            { korean: "손가락", vietnamese: "Ngón tay" },
+            { korean: "발가락", vietnamese: "Ngón chân" },
+            { korean: "몸", vietnamese: "Cơ thể" },
+            { korean: "병원", vietnamese: "Bệnh viện" },
+            { korean: "의사", vietnamese: "Bác sĩ" },
+            { korean: "간호사", vietnamese: "Y tá" },
+            { korean: "약", vietnamese: "Thuốc" },
+            { korean: "약국", vietnamese: "Hiệu thuốc" },
+            { korean: "감기", vietnamese: "Cảm cúm" },
+            { korean: "열", vietnamese: "Sốt" },
+            { korean: "기침", vietnamese: "Ho" },
+            { korean: "두통", vietnamese: "Đau đầu" },
+            { korean: "배탈", vietnamese: "Đau bụng" },
+            { korean: "치과", vietnamese: "Nha khoa" },
+            { korean: "치과 의사", vietnamese: "Nha sĩ" },
+            { korean: "건강하다", vietnamese: "Khỏe mạnh" },
+            { korean: "아프다", vietnamese: "Bị ốm, đau" },
+            { korean: "피곤하다", vietnamese: "Mệt mỏi" },
+            { korean: "졸리다", vietnamese: "Buồn ngủ" },
+            { korean: "배고프다", vietnamese: "Đói bụng" },
+            { korean: "배부르다", vietnamese: "No bụng" },
+            { korean: "목마르다", vietnamese: "Khát nước" },
+            { korean: "운동하다", vietnamese: "Tập thể dục" },
+            { korean: "쉬다", vietnamese: "Nghỉ ngơi" },
+            { korean: "자다", vietnamese: "Ngủ" },
+            { korean: "일어나다", vietnamese: "Thức dậy" },
+            { korean: "씻다", vietnamese: "Rửa" },
+            { korean: "세수하다", vietnamese: "Rửa mặt" },
+            { korean: "이 닦다", vietnamese: "Đánh răng" },
+            { korean: "샤워하다", vietnamese: "Tắm vòi sen" },
+            { korean: "목욕하다", vietnamese: "Tắm bồn" }
         ];
-        selectList = ques.filter(
-          (sl) => !incorrectList.some((ic) => sl?.id === ic?.id)
-        );
-        const idIncorrect = questionList.findIndex(
-          (ques) => ques?.id === incorrectList[0]?.id
-        );
-        if (incorrectList.length > 0) makeAgainMode = true;
-        if (idIncorrect !== -1) {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = idIncorrect;
-          displayQuestion(questionList[currentQuestionIndex]);
+
+        let currentWordIndex = 0;
+        let showMeaning = false;
+
+        const vocabularyCard = document.getElementById('vocabularyCard');
+        const koreanWordDiv = document.getElementById('koreanWord');
+        const vietnameseMeaningDiv = document.getElementById('vietnameseMeaning');
+        const showMeaningBtn = document.getElementById('showMeaningBtn');
+        const readWordBtn = document.getElementById('readWordBtn');
+        const nextWordBtn = document.getElementById('nextWordBtn');
+        const prevWordBtn = document.getElementById('prevWordBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const messageDiv = document.getElementById('message');
+        const progressBar = document.getElementById('progressBar');
+
+        // Speech Synthesis setup
+        const synth = window.speechSynthesis;
+        let koreanVoice = null;
+
+        // Find a Korean voice
+        function setKoreanVoice() {
+            const voices = synth.getVoices();
+            koreanVoice = voices.find(voice => voice.lang === 'ko-KR' || voice.name.includes('Korean'));
+            if (!koreanVoice) {
+                console.warn("Không tìm thấy giọng nói tiếng Hàn. Sẽ sử dụng giọng mặc định.");
+            }
         }
-      };
 
-      const handleNextQuestion = (target) => {
-        if (autoPlayTimeout !== null) clearTimeout(autoPlayTimeout);
-        if (currentQuestionIndex >= questionList.length - 1) {
-          displayResult();
-          return;
-        } else {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = makeAgainMode
-            ? questionList.findIndex(
-                (ques) => ques?.id === incorrectList[0]?.id
-              )
-            : ++currentQuestionIndex;
-          displayQuestion(questionList[currentQuestionIndex]);
-          target.disabled = false;
+        setKoreanVoice();
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = setKoreanVoice;
         }
-        const answer = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === questionList[currentQuestionIndex].id
-        );
-        if (answer)
-          checkAnswer(
-            answer,
-            selectList,
-            indexSelected,
-            selectList[indexSelected]?.chooseId
-          );
-      };
 
-      const handleBackQuestion = (target) => {
-        if (autoPlayTimeout !== null) clearTimeout(autoPlayTimeout);
-        if (currentQuestionIndex <= 0) {
-          target.disabled = true;
-          return;
-        } else {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = makeAgainMode
-            ? questionList.findIndex(
-                (ques) => ques?.id === incorrectList[0]?.id
-              )
-            : --currentQuestionIndex;
-          displayQuestion(questionList[currentQuestionIndex]);
-          target.disabled = false;
-        }
-        const answer = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === questionList[currentQuestionIndex].id
-        );
-        if (answer)
-          checkAnswer(
-            answer,
-            selectList,
-            indexSelected,
-            selectList[indexSelected]?.chooseId
-          );
-      };
-
-      shuffleBtn.addEventListener("click", (e) => handleShuffleArray(e));
-      againBtn.addEventListener("click", () => handleMakeIncorrect(selectList));
-      nextBtn.addEventListener("click", (e) => handleNextQuestion(e.target));
-      backBtn.addEventListener("click", (e) => handleBackQuestion(e.target));
-
-      function checkAnswer(element, ques, index, idActiveResult) {
-        const question = ques[index] || [];
-        const correctIndex = question?.idCorrectResult;
-        if (correctIndex !== undefined && idActiveResult !== undefined) {
-          if (+idActiveResult === +correctIndex) {
-            element.forEach((elm) => {
-              if (+elm.dataset.result === +idActiveResult)
-                elm.classList.add("correct");
-            });
-          } else {
-            element.forEach((elm) => {
-              if (+elm.dataset.result === +correctIndex)
-                elm.classList.add("correct");
-              else if (
-                +elm.dataset.result !== +correctIndex &&
-                +elm.dataset.result === +idActiveResult
-              )
-                elm.classList.add("incorrect");
-            });
-          }
-        }
-      }
-
-      const head = document.createElement("section");
-      const title = document.createElement("h2");
-      const currentQuestion = document.createElement("span");
-      const thumb_question = document.createElement("img");
-
-
-      // === PHẦN MỚI: HÀM RENDER MỤC LỤC ===
-      function renderQuestionIndex() {
-        indexGrid.innerHTML = ""; // Xóa mục lục cũ
-        questionList.forEach((q, index) => {
-            const item = document.createElement("div");
-            item.className = "index-item";
-            item.textContent = index + 1;
-            item.dataset.index = index;
-
-            // Kiểm tra trạng thái câu hỏi để thêm class
-            const answeredQuestion = selectList.find(ans => ans.id === q.id);
-            if(answeredQuestion) {
-                item.classList.add("answered");
-                if(answeredQuestion.isCorrect) {
-                    item.classList.add("correct");
-                } else {
-                    item.classList.add("incorrect");
+        function readKoreanWord(word) {
+            if (synth.speaking) {
+                synth.cancel(); // Stop any current speech
+            }
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'ko-KR'; // Ensure Korean language
+            if (koreanVoice) {
+                utterance.voice = koreanVoice;
+            } else {
+                const voices = synth.getVoices();
+                koreanVoice = voices.find(voice => voice.lang.startsWith('ko'));
+                if (koreanVoice) {
+                    utterance.voice = koreanVoice;
                 }
             }
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            synth.speak(utterance);
+        }
 
-            if (index === currentQuestionIndex) {
-                item.classList.add("current");
+        function updateCard() {
+            const currentWord = vocabulary[currentWordIndex];
+            koreanWordDiv.textContent = currentWord.korean;
+
+            if (showMeaning) {
+                vietnameseMeaningDiv.textContent = currentWord.vietnamese;
+                vocabularyCard.classList.add('show-meaning');
+            } else {
+                vietnameseMeaningDiv.textContent = 'Chạm hoặc nhấn "Hiện Nghĩa" để xem'; // Thêm hướng dẫn khi ẩn nghĩa
+                vocabularyCard.classList.remove('show-meaning');
             }
-
-            // Sự kiện click để chuyển câu hỏi
-            item.addEventListener('click', () => {
-                currentQuestionIndex = parseInt(item.dataset.index);
-                questionContainer.innerHTML = "";
-                displayQuestion(questionList[currentQuestionIndex]);
-                questionIndexContainer.classList.remove('show'); // Ẩn mục lục sau khi chọn
-            });
-
-            indexGrid.appendChild(item);
-        });
-      }
-
-
-      function displayQuestion(question) {
-        // Cập nhật mục lục mỗi khi hiển thị câu hỏi mới
-        renderQuestionIndex();
-
-        const currentId = currentQuestionIndex;
-        if (question.thumb) {
-          thumb_question.id = "thumb_question";
-          thumb_question.setAttribute("src", question.thumb);
-          questionContainer.appendChild(thumb_question);
-        }
-
-        title.id = "title";
-        title.textContent = question.title;
-        currentQuestion.textContent = `${currentId + 1} / ${questionList.length}`;
-        head.id = "head";
-        
-        // Xóa con cũ trước khi thêm vào
-        head.innerHTML = ''; 
-        head.appendChild(title);
-        head.appendChild(currentQuestion);
-        // === CHỈNH SỬA: THÊM ICON VÀO HEAD ===
-        head.appendChild(indexToggleIcon);
-        // === KẾT THÚC CHỈNH SỬA ===
-
-        questionContainer.appendChild(head);
-
-        question.results.forEach((answer, index) => {
-          const answerDiv = document.createElement("div");
-          answerDiv.setAttribute("data-result", answer.idResult);
-          answerDiv.classList.add("answer");
-          answerDiv.textContent = answer.value;
-          questionContainer.appendChild(answerDiv);
-        });
-
-        const answerItem = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === question.id
-        );
-
-        // Hiển thị lại câu trả lời nếu đã có
-        if(indexSelected > -1) {
-            checkAnswer(
-                answerItem,
-                questionList,
-                currentQuestionIndex,
-                selectList[indexSelected].chooseId
-            );
-        }
-
-
-        answerItem.forEach((as, index) => {
-          as.addEventListener("click", (e) => {
-            incorrectList = incorrectList.filter((ic) => ic?.id !== question?.id);
-            const selected = selectList.some((item) => item.id === question.id);
-            if (incorrectList.length === 0 && makeAgainMode) makeAgainMode = false;
             
-            if (!selected) {
-              const selectData = {};
-              const statusResult = +e.target.dataset.result === +question.idCorrectResult;
-              selectData.id = question.id;
-              selectData.idCorrectResult = question.idCorrectResult;
-              selectData.chooseId = +e.target.dataset.result;
-              selectData.isCorrect = statusResult;
-              selectList.push(selectData);
-              e.target.classList.add("active");
-              checkAnswer(
-                answerItem,
-                questionList,
-                currentQuestionIndex,
-                e.target.dataset.result
-              );
-              
-              // === CHỈNH SỬA: CẬP NHẬT LẠI MỤC LỤC SAU KHI TRẢ LỜI ===
-              renderQuestionIndex(); 
-              // === KẾT THÚC CHỈNH SỬA ===
-
-              autoPlayTimeout = setTimeout(() => handleNextQuestion(nextBtn), 1500);
-            }
-          });
-        });
-      }
-
-      function displayResult() {
-        questionContainer.innerHTML = ''; // Xóa câu hỏi cuối cùng
-        let totalCorrect = 0;
-        let totalScore = 0;
-        let avgScore = 10 / questionList.length;
-        const resultContainer = document.getElementById("result");
-        if (selectList.length < questionList.length) {
-            // Có thể thêm thông báo chưa hoàn thành ở đây nếu muốn
+            updateProgressBar();
+            messageDiv.textContent = '';
         }
-        selectList.forEach((ans) => {
-          if (ans.isCorrect) totalCorrect++;
+
+        function updateProgressBar() {
+            const progress = ((currentWordIndex + 1) / vocabulary.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        showMeaningBtn.addEventListener('click', () => {
+            showMeaning = true;
+            updateCard();
         });
-        totalScore = totalCorrect * avgScore;
-        resultContainer.innerHTML = `
-            <h2>Kết quả</h2>
-            <span>Tổng số câu đúng: <strong>${totalCorrect}/${questionList.length}</strong></span>
-            <p>Bạn đã hoàn thành bài thi!<br>Điểm của bạn là:
-                <strong>${totalScore.toFixed(1)} / 10</strong>
-            </p>
-        `;
-      }
-      
-      // Hiển thị câu hỏi đầu tiên
-      displayQuestion(questionList[currentQuestionIndex]);
+
+        readWordBtn.addEventListener('click', () => {
+            readKoreanWord(vocabulary[currentWordIndex].korean);
+        });
+
+        koreanWordDiv.addEventListener('click', () => {
+            readKoreanWord(vocabulary[currentWordIndex].korean);
+        });
+
+        nextWordBtn.addEventListener('click', () => {
+            if (currentWordIndex < vocabulary.length - 1) {
+                currentWordIndex++;
+                showMeaning = false;
+                updateCard();
+            } else {
+                messageDiv.textContent = 'Bạn đã hoàn thành tất cả từ vựng!';
+            }
+        });
+
+        prevWordBtn.addEventListener('click', () => {
+            if (currentWordIndex > 0) {
+                currentWordIndex--;
+                showMeaning = false;
+                updateCard();
+            } else {
+                messageDiv.textContent = 'Đây là từ đầu tiên.';
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            currentWordIndex = 0;
+            showMeaning = false;
+            updateCard();
+            messageDiv.textContent = 'Đã làm lại từ đầu.';
+        });
+
+        // Initialize on load
+        updateCard();
     </script>
-  </body>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
 </html>
