@@ -1,901 +1,376 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ôn Thi TOPIK 1 - Từ Vựng Hiện Đại</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #4CAF50; /* Xanh lá */
-            --primary-dark: #388E3C;
-            --secondary-color: #2196F3; /* Xanh dương */
-            --accent-color: #FFC107; /* Vàng */
-            --text-color: #333;
-            --light-text-color: #666;
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --border-radius: 12px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Tài Xỉu - Nặn Bát (UI Refined)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-color: #1a1a2e;
+--container-bg: rgba(26, 26, 46, 0.7);
+--mat-bg: #16213e;
+--accent-gold: #e9b384;
+--text-light: #e0fbfc;
+--color-tai: #ff4848;
+--color-xiu: #48a9ff;
+--color-win: #2ecc71;
+--color-loss: #e74c3c;
+--border-color: rgba(233, 179, 132, 0.3);
+}
 
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-color);
-            line-height: 1.6;
-        }
+/* --- Cài đặt cơ bản & Nền --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg-color); background-image: linear-gradient(315deg, #1a1a2e 0%, #16213e 74%); color: var(--text-light); padding: 20px; }
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            width: 95%;
-            max-width: 700px;
-            margin: 30px auto;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+/* --- Overlay & Modals --- */
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.3s ease; }
+.auth-container, .modal-content { background: var(--container-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center; }
+.auth-container h2, .modal-content h2 { color: var(--accent-gold); margin-bottom: 20px; }
+.auth-container input, .modal-content input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-size: 1em; }
+.auth-container button, .modal-content button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: background 0.2s; }
+.auth-container button, .modal-content .btn-action { background: var(--accent-gold); color: var(--bg-color); }
+.auth-container button:hover, .modal-content .btn-action:hover { background: #d8a26f; }
+.auth-container .toggle-form { margin-top: 15px; color: var(--accent-gold); cursor: pointer; text-decoration: underline; }
+#register-form { display: none; }
+.hidden { display: none !important; opacity: 0; visibility: hidden; }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-        }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 900; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+.modal.active { opacity: 1; visibility: visible; }
+.modal-content { position: relative; }
+.modal-content .form-group { margin-bottom: 15px; }
+.modal-content .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+.modal-content .btn-confirm { flex-grow: 1; background: var(--color-win); color: white; }
+.modal-content .btn-cancel { flex-grow: 1; background: #7f8c8d; color: white; }
+.modal-close { position: absolute; top: 10px; right: 15px; font-size: 2em; color: white; cursor: pointer; }
 
-        h1 {
-            color: var(--primary-dark);
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            font-weight: 700;
-        }
+/* --- Kiểu cho Lịch sử GD --- */
+#transaction-history-list { list-style: none; max-height: 400px; overflow-y: auto; padding-right: 10px; text-align: left; }
+.transaction-item { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+.transaction-item .main-info { display: flex; justify-content: space-between; align-items: center; }
+.transaction-item .info .type { font-weight: bold; }
+.transaction-item .info .time { font-size: 0.8em; opacity: 0.7; }
+.transaction-item .amount { font-weight: bold; font-size: 1.1em;}
+.transaction-item.deposit .amount { color: var(--color-win); }
+.transaction-item.withdraw .amount { color: var(--color-loss); }
+.transaction-details { border-top: 1px solid var(--border-color); margin-top: 8px; padding-top: 8px; font-size: 0.85em; opacity: 0.9; text-align: left; }
+.transaction-details div { margin-bottom: 4px; }
+.transaction-details .detail-label { font-weight: bold; color: var(--accent-gold); min-width: 110px; display: inline-block; }
 
-        .vocabulary-card {
-            background-color: #e8f5e9; /* Light green */
-            border: 1px solid var(--primary-color);
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            margin-bottom: 30px;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: relative;
-            overflow: hidden;
-        }
+/* --- MỚI: Kiểu cho thông tin nạp tiền --- */
+.deposit-info { text-align: left; font-size: 1.1em; line-height: 1.8; }
+.deposit-info .info-line { border-bottom: 1px solid var(--border-color); padding: 8px 0; }
+.deposit-info .info-line:last-child { border-bottom: none; }
+.deposit-info .info-label { font-weight: bold; color: var(--accent-gold); min-width: 100px; display: inline-block; }
+.deposit-info .info-value { color: var(--text-light); word-break: break-all; }
 
-        /* Không ẩn tiếng Hàn nữa, chỉ ẩn tiếng Việt khi chưa hiện */
-        .vocabulary-card .korean-word {
-            font-size: 3.5em;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-            position: relative;
-            display: inline-block;
-        }
+/* --- Bố cục chính & Header --- */
+.app-container { display: flex; gap: 20px; width: 100%; max-width: 950px; }
+.main-game { flex-grow: 1; }
+.game-container { width: 100%; background: var(--container-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); text-align: center; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; flex-wrap: wrap; gap: 10px;}
+.user-info { display: flex; align-items: center; gap: 15px; }
+#user-display { font-weight: 600; }
+#money-display { font-size: 1.5em; font-weight: 700; color: #fff; background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 10px; }
+#session-display { font-size: 1.2em; font-weight: 600; color: var(--accent-gold); }
+#timer-display { width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.2); border: 3px solid var(--color-win); display: flex; justify-content: center; align-items: center; font-size: 2.2em; font-weight: 700; color: #fff; transition: all 0.3s ease; }
+#timer-display.locked { border-color: var(--color-loss); box-shadow: 0 0 15px var(--color-loss); animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.header-buttons { display: flex; gap: 8px; margin-top: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
+.header-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent-gold); background: transparent; color: var(--accent-gold); cursor: pointer; transition: all 0.2s; font-size: 0.9em; }
+.header-btn:hover { background: var(--accent-gold); color: var(--bg-color); }
+.header-btn.active { background-color: var(--accent-gold); color: var(--bg-color); box-shadow: 0 0 10px var(--accent-gold); }
 
-        .vocabulary-card .korean-word:hover {
-            color: var(--secondary-color);
-        }
+/* --- Cải tiến Bát, Xúc xắc & Nặn --- */
+.game-mat { width: 100%; height: 220px; background-color: var(--mat-bg); border: 2px solid var(--border-color); border-radius: 15px; margin: 0 auto 20px auto; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+.dice-area { position: relative; width: 180px; height: 180px; }
+.bowl { width: 190px; height: 190px; background: radial-gradient(circle at 50% 50%, #8a8a9e, #2a2a3e 70%); border: 3px solid #b8860b; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; cursor: default; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); user-select: none; }
+.bowl.ready-to-nặn { cursor: grab; }
+.bowl.ready-to-nặn:active { cursor: grabbing; }
+.bowl.revealed { transform: translate(150%, -50%) !important; }
+.bowl.shaking { animation: shake-animation 0.5s infinite; }
+@keyframes shake-animation { 0%{transform:translate(-50%,-50%) rotate(0deg)} 25%{transform:translate(-52%,-52%) rotate(-5deg)} 50%{transform:translate(-48%,-48%) rotate(5deg)} 75%{transform:translate(-51%,-51%) rotate(-3deg)} 100%{transform:translate(-49%,-49%) rotate(3deg)} }
+.dice { width: 45px; height: 45px; background-color: #fff8e1; border-radius: 6px; position: absolute; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 5px; opacity: 0; z-index: 5; /* Thấp hơn bát */ }
+.dice.visible { opacity: 1; transition: opacity 0.2s; }
+.dot { width: 9px; height: 9px; background-color: #c0392b; border-radius: 50%; align-self: center; justify-self: center; }
+.face-1 .dot:nth-child(1){grid-area:2/2}.face-2 .dot:nth-child(1){grid-area:1/1}.face-2 .dot:nth-child(2){grid-area:3/3}.face-3 .dot:nth-child(1){grid-area:1/1}.face-3 .dot:nth-child(2){grid-area:2/2}.face-3 .dot:nth-child(3){grid-area:3/3}.face-4 .dot:nth-child(1){grid-area:1/1}.face-4 .dot:nth-child(2){grid-area:1/3}.face-4 .dot:nth-child(3){grid-area:3/1}.face-4 .dot:nth-child(4){grid-area:3/3}.face-5 .dot:nth-child(1){grid-area:1/1}.face-5 .dot:nth-child(2){grid-area:1/3}.face-5 .dot:nth-child(3){grid-area:2/2}.face-5 .dot:nth-child(4){grid-area:3/1}.face-5 .dot:nth-child(5){grid-area:3/3}.face-6 .dot:nth-child(1){grid-area:1/1}.face-6 .dot:nth-child(2){grid-area:1/3}.face-6 .dot:nth-child(3){grid-area:2/1}.face-6 .dot:nth-child(4){grid-area:2/3}.face-6 .dot:nth-child(5){grid-area:3/1}.face-6 .dot:nth-child(6){grid-area:3/3}
+.roadmap-container { width: 100%; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+.roadmap-track { display: flex; justify-content: flex-start; gap: 8px; transition: opacity 0.3s ease; }
+.roadmap-track.clearing { opacity: 0; }
+.roadmap-item { width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.2em; color: #fff; flex-shrink: 0; animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes pop-in { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.roadmap-item.tai { background-color: var(--color-tai); } .roadmap-item.xiu { background-color: var(--color-xiu); }
+.betting-controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; }
+.bet-option { flex-grow: 1; padding: 15px 20px; font-size: 1.5em; font-weight: bold; border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+.bet-option:disabled { cursor: not-allowed; filter: grayscale(80%); opacity: 0.7; }
+#bet-xiu { background: linear-gradient(145deg, #4da8ff, var(--color-xiu)); }
+#bet-tai { background: linear-gradient(145deg, #ff6b6b, var(--color-tai)); }
+.bet-option:hover:not(:disabled) { transform: translateY(-3px); }
+.bet-option.active-bet { border-color: var(--accent-gold); transform: scale(1.05); box-shadow: 0 0 20px var(--accent-gold); }
+#bet-amount { width: 150px; padding: 14px; font-size: 1.5em; text-align: center; border: 2px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: #fff; border-radius: 10px; font-weight: bold; transition: all 0.2s; }
+#bet-amount:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold); }
+#bet-amount:disabled { background: #555; cursor: not-allowed; }
+#bet-amount.input-error { animation: input-shake 0.4s; border-color: var(--color-loss); }
+@keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+#result-message { height: 40px; font-size: 1.2em; font-weight: bold; color: var(--text-light); display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
+.history-panel { width: 350px; flex-shrink: 0; background: var(--container-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); display: flex; flex-direction: column; max-height: 750px; }
+.history-panel h2 { text-align: center; color: var(--accent-gold); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+#history-list { list-style: none; overflow-y: auto; flex-grow: 1; padding-right: 10px; }
+#history-list::-webkit-scrollbar { width: 5px; } #history-list::-webkit-scrollbar-track { background: transparent; } #history-list::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 5px; }
+.history-item { display: grid; grid-template-columns: 60px 30px 1fr 60px; align-items: center; gap: 5px; padding: 8px; border-radius: 5px; margin-bottom: 8px; background: rgba(0,0,0,0.2); font-size: 0.9em; }
+.history-item .result { font-weight: bold; padding: 3px 8px; border-radius: 5px; color: #fff; text-align: center;}
+.history-item .result.tai { background-color: var(--color-tai); } .history-item .result.xiu { background-color: var(--color-xiu); }
+.history-item .dice-details { font-size: 0.8em; opacity: 0.7; }
+.history-item .total { font-weight: bold; }
+.history-item .winnings { font-weight: bold; text-align: right; }
+.history-item .winnings.win { color: var(--color-win); }
+.history-item .winnings.loss { color: var(--color-loss); }
+#reset-button { margin-top: 15px; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+#reset-button:hover { background-color: #e74c3c; }
 
-        .vocabulary-card .vietnamese-meaning {
-            font-size: 1.4em;
-            color: var(--light-text-color);
-            min-height: 1.4em; /* Prevent layout shift */
-            opacity: 0; /* Mặc định ẩn nghĩa tiếng Việt */
-            transform: translateY(10px);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .vocabulary-card.show-meaning .vietnamese-meaning {
-            opacity: 1; /* Hiện nghĩa tiếng Việt khi có class show-meaning */
-            transform: translateY(0);
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .controls button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .controls button:hover {
-            background-color: #1976D2; /* Darker secondary */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        #showMeaningBtn { background-color: var(--primary-color); }
-        #showMeaningBtn:hover { background-color: var(--primary-dark); }
-        #resetBtn { background-color: #f44336; } /* Red for reset */
-        #resetBtn:hover { background-color: #d32f2f; }
-
-        .message {
-            margin-top: 25px;
-            font-weight: 600;
-            color: var(--light-text-color);
-            font-size: 1.1em;
-            min-height: 1.5em; /* Prevent layout shift */
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-top: 30px;
-            height: 10px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background: linear-gradient(to right, var(--accent-color), var(--primary-color));
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.4s ease-out;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .container {
-                margin: 20px auto;
-                padding: 20px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            .vocabulary-card .korean-word {
-                font-size: 2.8em;
-            }
-            .vocabulary-card .vietnamese-meaning {
-                font-size: 1.2em;
-            }
-            .controls button {
-                width: calc(50% - 15px); /* Two buttons per row */
-                padding: 10px 15px;
-                font-size: 1em;
-            }
-        }
-    </style>
+@media (max-width: 768px) { body { align-items: flex-start; } .app-container { flex-direction: column; } .history-panel { width: 100%; max-height: 250px; } .header { justify-content: center; } }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Luyện Từ Vựng TOPIK 1 <p style="color: red;font-size: 20px;font-weight: 900;">by Nguyễn Thế Quang Huy</p></h1>
-        <div class="vocabulary-card" id="vocabularyCard">
-            <div class="korean-word" id="koreanWord" title="Nhấn để nghe"></div>
-            <div class="vietnamese-meaning" id="vietnameseMeaning"></div>
-        </div>
-        <div class="controls">
-            <button id="showMeaningBtn">Hiện Nghĩa</button>
-            <button id="readWordBtn">Nghe</button>
-            <button id="nextWordBtn">Từ Tiếp Theo</button>
-            <button id="prevWordBtn">Từ Trước</button>
-            <button id="resetBtn">Làm Lại</button>
-        </div>
-        <div class="message" id="message"></div>
-        <div class="progress-bar-container">
-            <div class="progress" id="progressBar"></div>
-        </div>
-    </div>
 
-    <script>
-        const vocabulary = [
-            { korean: "안녕하세요", vietnamese: "Xin chào" },
-            { korean: "감사합니다", vietnamese: "Cảm ơn" },
-            { korean: "네", vietnamese: "Vâng, Có" },
-            { korean: "아니요", vietnamese: "Không" },
-            { korean: "죄송합니다", vietnamese: "Xin lỗi" },
-            { korean: "안녕히 계세요", vietnamese: "Tạm biệt (người ở lại)" },
-            { korean: "안녕히 가세요", vietnamese: "Tạm biệt (người đi)" },
-            { korean: "밥", vietnamese: "Cơm" },
-            { korean: "물", vietnamese: "Nước" },
-            { korean: "학교", vietnamese: "Trường học" },
-            { korean: "학생", vietnamese: "Học sinh" },
-            { korean: "선생님", vietnamese: "Giáo viên" },
-            { korean: "친구", vietnamese: "Bạn bè" },
-            { korean: "책", vietnamese: "Sách" },
-            { korean: "연필", vietnamese: "Bút chì" },
-            { korean: "사과", vietnamese: "Táo" },
-            { korean: "돈", vietnamese: "Tiền" },
-            { korean: "집", vietnamese: "Nhà" },
-            { korean: "가족", vietnamese: "Gia đình" },
-            { korean: "사랑해요", vietnamese: "Anh/Em yêu em/anh" },
-            { korean: "아버지", vietnamese: "Bố" },
-            { korean: "어머니", vietnamese: "Mẹ" },
-            { korean: "형", vietnamese: "Anh trai (em trai gọi)" },
-            { korean: "오빠", vietnamese: "Anh trai (em gái gọi)" },
-            { korean: "누나", vietnamese: "Chị gái (em trai gọi)" },
-            { korean: "언니", vietnamese: "Chị gái (em gái gọi)" },
-            { korean: "동생", vietnamese: "Em" },
-            { korean: "할아버지", vietnamese: "Ông" },
-            { korean: "할머니", vietnamese: "Bà" },
-            { korean: "남편", vietnamese: "Chồng" },
-            { korean: "아내", vietnamese: "Vợ" },
-            { korean: "아들", vietnamese: "Con trai" },
-            { korean: "딸", vietnamese: "Con gái" },
-            { korean: "이름", vietnamese: "Tên" },
-            { korean: "나라", vietnamese: "Quốc gia" },
-            { korean: "한국", vietnamese: "Hàn Quốc" },
-            { korean: "베트남", vietnamese: "Việt Nam" },
-            { korean: "미국", vietnamese: "Mỹ" },
-            { korean: "중국", vietnamese: "Trung Quốc" },
-            { korean: "일본", vietnamese: "Nhật Bản" },
-            { korean: "영어", vietnamese: "Tiếng Anh" },
-            { korean: "한국어", vietnamese: "Tiếng Hàn" },
-            { korean: "베트남어", vietnamese: "Tiếng Việt" },
-            { korean: "직업", vietnamese: "Nghề nghiệp" },
-            { korean: "회사원", vietnamese: "Nhân viên công ty" },
-            { korean: "의사", vietnamese: "Bác sĩ" },
-            { korean: "경찰", vietnamese: "Cảnh sát" },
-            { korean: "요리사", vietnamese: "Đầu bếp" },
-            { korean: "가수", vietnamese: "Ca sĩ" },
-            { korean: "배우", vietnamese: "Diễn viên" },
-            { korean: "학생", vietnamese: "Học sinh/Sinh viên" },
-            { korean: "회사", vietnamese: "Công ty" },
-            { korean: "대학교", vietnamese: "Đại học" },
-            { korean: "집", vietnamese: "Nhà" },
-            { korean: "방", vietnamese: "Phòng" },
-            { korean: "화장실", vietnamese: "Nhà vệ sinh" },
-            { korean: "부엌", vietnamese: "Bếp" },
-            { korean: "거실", vietnamese: "Phòng khách" },
-            { korean: "침대", vietnamese: "Giường" },
-            { korean: "의자", vietnamese: "Ghế" },
-            { korean: "책상", vietnamese: "Bàn học/làm việc" },
-            { korean: "창문", vietnamese: "Cửa sổ" },
-            { korean: "문", vietnamese: "Cửa" },
-            { korean: "텔레비전", vietnamese: "Ti vi" },
-            { korean: "냉장고", vietnamese: "Tủ lạnh" },
-            { korean: "세탁기", vietnamese: "Máy giặt" },
-            { korean: "전화", vietnamese: "Điện thoại" },
-            { korean: "컴퓨터", vietnamese: "Máy tính" },
-            { korean: "옷", vietnamese: "Quần áo" },
-            { korean: "신발", vietnamese: "Giày" },
-            { korean: "모자", vietnamese: "Mũ" },
-            { korean: "가방", vietnamese: "Túi xách" },
-            { korean: "안경", vietnamese: "Kính" },
-            { korean: "시계", vietnamese: "Đồng hồ" },
-            { korean: "음식", vietnamese: "Thức ăn" },
-            { korean: "과일", vietnamese: "Trái cây" },
-            { korean: "야채", vietnamese: "Rau củ" },
-            { korean: "고기", vietnamese: "Thịt" },
-            { korean: "생선", vietnamese: "Cá" },
-            { korean: "우유", vietnamese: "Sữa" },
-            { korean: "빵", vietnamese: "Bánh mì" },
-            { korean: "커피", vietnamese: "Cà phê" },
-            { korean: "차", vietnamese: "Trà" },
-            { korean: "주스", vietnamese: "Nước ép" },
-            { korean: "맥주", vietnamese: "Bia" },
-            { korean: "술", vietnamese: "Rượu" },
-            { korean: "시간", vietnamese: "Thời gian" },
-            { korean: "오늘", vietnamese: "Hôm nay" },
-            { korean: "어제", vietnamese: "Hôm qua" },
-            { korean: "내일", vietnamese: "Ngày mai" },
-            { korean: "아침", vietnamese: "Buổi sáng" },
-            { korean: "점심", vietnamese: "Buổi trưa" },
-            { korean: "저녁", vietnamese: "Buổi tối" },
-            { korean: "새벽", vietnamese: "Rạng sáng" },
-            { korean: "밤", vietnamese: "Đêm" },
-            { korean: "월요일", vietnamese: "Thứ Hai" },
-            { korean: "화요일", vietnamese: "Thứ Ba" },
-            { korean: "수요일", vietnamese: "Thứ Tư" },
-            { korean: "목요일", vietnamese: "Thứ Năm" },
-            { korean: "금요일", vietnamese: "Thứ Sáu" },
-            { korean: "토요일", vietnamese: "Thứ Bảy" },
-            { korean: "일요일", vietnamese: "Chủ Nhật" },
-            { korean: "주말", vietnamese: "Cuối tuần" },
-            { korean: "년", vietnamese: "Năm" },
-            { korean: "월", vietnamese: "Tháng" },
-            { korean: "일", vietnamese: "Ngày" },
-            { korean: "시", vietnamese: "Giờ" },
-            { korean: "분", vietnamese: "Phút" },
-            { korean: "초", vietnamese: "Giây" },
-            { korean: "봄", vietnamese: "Mùa xuân" },
-            { korean: "여름", vietnamese: "Mùa hè" },
-            { korean: "가을", vietnamese: "Mùa thu" },
-            { korean: "겨울", vietnamese: "Mùa đông" },
-            { korean: "날씨", vietnamese: "Thời tiết" },
-            { korean: "비", vietnamese: "Mưa" },
-            { korean: "눈", vietnamese: "Tuyết" },
-            { korean: "바람", vietnamese: "Gió" },
-            { korean: "구름", vietnamese: "Mây" },
-            { korean: "해", vietnamese: "Mặt trời" },
-            { korean: "달", vietnamese: "Mặt trăng" },
-            { korean: "별", vietnamese: "Ngôi sao" },
-            { korean: "덥다", vietnamese: "Nóng" },
-            { korean: "춥다", vietnamese: "Lạnh" },
-            { korean: "따뜻하다", vietnamese: "Ấm áp" },
-            { korean: "시원하다", vietnamese: "Mát mẻ" },
-            { korean: "맑다", vietnamese: "Trong xanh, quang đãng" },
-            { korean: "흐리다", vietnamese: "Âm u, nhiều mây" },
-            { korean: "오다", vietnamese: "Đến" },
-            { korean: "가다", vietnamese: "Đi" },
-            { korean: "먹다", vietnamese: "Ăn" },
-            { korean: "마시다", vietnamese: "Uống" },
-            { korean: "자다", vietnamese: "Ngủ" },
-            { korean: "일어나다", vietnamese: "Thức dậy" },
-            { korean: "읽다", vietnamese: "Đọc" },
-            { korean: "쓰다", vietnamese: "Viết" },
-            { korean: "공부하다", vietnamese: "Học" },
-            { korean: "운동하다", vietnamese: "Tập thể dục" },
-            { korean: "일하다", vietnamese: "Làm việc" },
-            { korean: "이야기하다", vietnamese: "Nói chuyện" },
-            { korean: "듣다", vietnamese: "Nghe" },
-            { korean: "보다", vietnamese: "Nhìn, xem" },
-            { korean: "만나다", vietnamese: "Gặp gỡ" },
-            { korean: "하다", vietnamese: "Làm" },
-            { korean: "좋아하다", vietnamese: "Thích" },
-            { korean: "싫어하다", vietnamese: "Ghét" },
-            { korean: "있다", vietnamese: "Có, ở" },
-            { korean: "없다", vietnamese: "Không có" },
-            { korean: "많다", vietnamese: "Nhiều" },
-            { korean: "적다", vietnamese: "Ít" },
-            { korean: "크다", vietnamese: "Lớn" },
-            { korean: "작다", vietnamese: "Nhỏ" },
-            { korean: "길다", vietnamese: "Dài" },
-            { korean: "짧다", vietnamese: "Ngắn" },
-            { korean: "높다", vietnamese: "Cao" },
-            { korean: "낮다", vietnamese: "Thấp" },
-            { korean: "빠르다", vietnamese: "Nhanh" },
-            { korean: "느리다", vietnamese: "Chậm" },
-            { korean: "예쁘다", vietnamese: "Đẹp (người, vật)" },
-            { korean: "아름답다", vietnamese: "Đẹp (cảnh quan, nghệ thuật)" },
-            { korean: "멋있다", vietnamese: "Ngầu, đẹp trai" },
-            { korean: "귀엽다", vietnamese: "Dễ thương" },
-            { korean: "착하다", vietnamese: "Hiền lành" },
-            { korean: "똑똑하다", vietnamese: "Thông minh" },
-            { korean: "재미있다", vietnamese: "Thú vị" },
-            { korean: "재미없다", vietnamese: "Nhàm chán" },
-            { korean: "힘들다", vietnamese: "Vất vả, khó khăn" },
-            { korean: "쉽다", vietnamese: "Dễ" },
-            { korean: "어렵다", vietnamese: "Khó" },
-            { korean: "비싸다", vietnamese: "Đắt" },
-            { korean: "싸다", vietnamese: "Rẻ" },
-            { korean: "멀다", vietnamese: "Xa" },
-            { korean: "가깝다", vietnamese: "Gần" },
-            { korean: "괜찮다", vietnamese: "Ổn, được" },
-            { korean: "좋다", vietnamese: "Tốt" },
-            { korean: "나쁘다", vietnamese: "Xấu" },
-            { korean: "행복하다", vietnamese: "Hạnh phúc" },
-            { korean: "슬프다", vietnamese: "Buồn" },
-            { korean: "기쁘다", vietnamese: "Vui vẻ" },
-            { korean: "피곤하다", vietnamese: "Mệt mỏi" },
-            { korean: "졸리다", vietnamese: "Buồn ngủ" },
-            { korean: "배고프다", vietnamese: "Đói bụng" },
-            { korean: "배부르다", vietnamese: "No bụng" },
-            { korean: "목마르다", vietnamese: "Khát nước" },
-            { korean: "아프다", vietnamese: "Đau, ốm" },
-            { korean: "건강하다", vietnamese: "Khỏe mạnh" },
-            { korean: "있다", vietnamese: "Có" },
-            { korean: "없다", vietnamese: "Không có" },
-            { korean: "안", vietnamese: "Không (phủ định động từ/tính từ)" },
-            { korean: "못", vietnamese: "Không thể (bất khả thi)" },
-            { korean: "그리고", vietnamese: "Và, rồi" },
-            { korean: "하지만", vietnamese: "Nhưng" },
-            { korean: "그래서", vietnamese: "Vì vậy, cho nên" },
-            { korean: "그러면", vietnamese: "Nếu vậy thì" },
-            { korean: "어서 오세요", vietnamese: "Mời vào, chào mừng" },
-            { korean: "천만에요", vietnamese: "Không có gì (đáp lại lời cảm ơn)" },
-            { korean: "실례합니다", vietnamese: "Xin lỗi (khi làm phiền)" },
-            { korean: "도와주세요", vietnamese: "Hãy giúp đỡ" },
-            { korean: "미안합니다", vietnamese: "Xin lỗi (tương tự 죄송합니다)" },
-            { korean: "축하합니다", vietnamese: "Chúc mừng" },
-            { korean: "생일", vietnamese: "Sinh nhật" },
-            { korean: "선물", vietnamese: "Quà tặng" },
-            { korean: "사진", vietnamese: "Ảnh" },
-            { korean: "영화", vietnamese: "Phim" },
-            { korean: "음악", vietnamese: "Âm nhạc" },
-            { korean: "운동", vietnamese: "Thể thao, vận động" },
-            { korean: "여행", vietnamese: "Du lịch" },
-            { korean: "쇼핑", vietnamese: "Mua sắm" },
-            { korean: "게임", vietnamese: "Trò chơi" },
-            { korean: "친구", vietnamese: "Bạn bè" },
-            { korean: "가족", vietnamese: "Gia đình" },
-            { korean: "아침 식사", vietnamese: "Bữa sáng" },
-            { korean: "점심 식사", vietnamese: "Bữa trưa" },
-            { korean: "저녁 식사", vietnamese: "Bữa tối" },
-            { korean: "시장", vietnamese: "Chợ" },
-            { korean: "백화점", vietnamese: "Cửa hàng bách hóa" },
-            { korean: "병원", vietnamese: "Bệnh viện" },
-            { korean: "약국", vietnamese: "Hiệu thuốc" },
-            { korean: "은행", vietnamese: "Ngân hàng" },
-            { korean: "우체국", vietnamese: "Bưu điện" },
-            { korean: "공항", vietnamese: "Sân bay" },
-            { korean: "기차역", vietnamese: "Nhà ga xe lửa" },
-            { korean: "버스 정류장", vietnamese: "Trạm xe buýt" },
-            { korean: "택시", vietnamese: "Taxi" },
-            { korean: "지하철", vietnamese: "Tàu điện ngầm" },
-            { korean: "비행기", vietnamese: "Máy bay" },
-            { korean: "배", vietnamese: "Thuyền, tàu" },
-            { korean: "자전거", vietnamese: "Xe đạp" },
-            { korean: "자동차", vietnamese: "Ô tô" },
-            { korean: "학교", vietnamese: "Trường học" },
-            { korean: "교실", vietnamese: "Phòng học" },
-            { korean: "선생님", vietnamese: "Giáo viên" },
-            { korean: "학생", vietnamese: "Học sinh" },
-            { korean: "숙제", vietnamese: "Bài tập về nhà" },
-            { korean: "시험", vietnamese: "Bài kiểm tra, thi" },
-            { korean: "공책", vietnamese: "Vở" },
-            { korean: "사전", vietnamese: "Từ điển" },
-            { korean: "볼펜", vietnamese: "Bút bi" },
-            { korean: "지우개", vietnamese: "Tẩy" },
-            { korean: "필통", vietnamese: "Hộp bút" },
-            { korean: "달력", vietnamese: "Lịch" },
-            { korean: "지도", vietnamese: "Bản đồ" },
-            { korean: "신문", vietnamese: "Báo" },
-            { korean: "잡지", vietnamese: "Tạp chí" },
-            { korean: "책", vietnamese: "Sách" },
-            { korean: "도서관", vietnamese: "Thư viện" },
-            { korean: "사진기", vietnamese: "Máy ảnh" },
-            { korean: "라디오", vietnamese: "Đài radio" },
-            { korean: "세수하다", vietnamese: "Rửa mặt" },
-            { korean: "이 닦다", vietnamese: "Đánh răng" },
-            { korean: "샤워하다", vietnamese: "Tắm vòi sen" },
-            { korean: "옷을 입다", vietnamese: "Mặc quần áo" },
-            { korean: "벗다", vietnamese: "Cởi (quần áo)" },
-            { korean: "씻다", vietnamese: "Rửa" },
-            { korean: "만들다", vietnamese: "Làm, tạo ra" },
-            { korean: "요리하다", vietnamese: "Nấu ăn" },
-            { korean: "청소하다", vietnamese: "Dọn dẹp" },
-            { korean: "빨래하다", vietnamese: "Giặt giũ" },
-            { korean: "전화하다", vietnamese: "Gọi điện thoại" },
-            { korean: "메시지를 보내다", vietnamese: "Gửi tin nhắn" },
-            { korean: "걷다", vietnamese: "Đi bộ" },
-            { korean: "뛰다", vietnamese: "Chạy" },
-            { korean: "춤추다", vietnamese: "Nhảy múa" },
-            { korean: "노래하다", vietnamese: "Hát" },
-            { korean: "그리다", vietnamese: "Vẽ" },
-            { korean: "배우다", vietnamese: "Học" },
-            { korean: "가르치다", vietnamese: "Dạy" },
-            { korean: "웃다", vietnamese: "Cười" },
-            { korean: "울다", vietnamese: "Khóc" },
-            { korean: "이야기하다", vietnamese: "Kể chuyện, nói chuyện" },
-            { korean: "말하다", vietnamese: "Nói" },
-            { korean: "묻다", vietnamese: "Hỏi" },
-            { korean: "대답하다", vietnamese: "Trả lời" },
-            { korean: "주다", vietnamese: "Cho" },
-            { korean: "받다", vietnamese: "Nhận" },
-            { korean: "빌리다", vietnamese: "Mượn" },
-            { korean: "빌려주다", vietnamese: "Cho mượn" },
-            { korean: "쓰다", vietnamese: "Sử dụng" },
-            { korean: "가지다", vietnamese: "Cầm, mang, có" },
-            { korean: "놓다", vietnamese: "Đặt, để" },
-            { korean: "앉다", vietnamese: "Ngồi" },
-            { korean: "서다", vietnamese: "Đứng" },
-            { korean: "열다", vietnamese: "Mở" },
-            { korean: "닫다", vietnamese: "Đóng" },
-            { korean: "켜다", vietnamese: "Bật (điện)" },
-            { korean: "끄다", vietnamese: "Tắt (điện)" },
-            { korean: "들어가다", vietnamese: "Đi vào" },
-            { korean: "나가다", vietnamese: "Đi ra" },
-            { korean: "올라가다", vietnamese: "Đi lên" },
-            { korean: "내려가다", vietnamese: "Đi xuống" },
-            { korean: "오다", vietnamese: "Đến" },
-            { korean: "가다", vietnamese: "Đi" },
-            { korean: "오르다", vietnamese: "Leo lên, tăng lên" },
-            { korean: "내리다", vietnamese: "Xuống, giảm xuống" },
-            { korean: "만들다", vietnamese: "Chế tạo, làm ra" },
-            { korean: "찾다", vietnamese: "Tìm kiếm, lấy" },
-            { korean: "알다", vietnamese: "Biết" },
-            { korean: "모르다", vietnamese: "Không biết" },
-            { korean: "살다", vietnamese: "Sống" },
-            { korean: "죽다", vietnamese: "Chết" },
-            { korean: "태어나다", vietnamese: "Sinh ra" },
-            { korean: "만나다", vietnamese: "Gặp gỡ" },
-            { korean: "헤어지다", vietnamese: "Chia tay" },
-            { korean: "결혼하다", vietnamese: "Kết hôn" },
-            { korean: "졸업하다", vietnamese: "Tốt nghiệp" },
-            { korean: "입학하다", vietnamese: "Nhập học" },
-            { korean: "시작하다", vietnamese: "Bắt đầu" },
-            { korean: "끝나다", vietnamese: "Kết thúc" },
-            { korean: "준비하다", vietnamese: "Chuẩn bị" },
-            { korean: "정리하다", vietnamese: "Sắp xếp, dọn dẹp" },
-            { korean: "빨리", vietnamese: "Nhanh chóng" },
-            { korean: "천천히", vietnamese: "Chậm rãi" },
-            { korean: "매일", vietnamese: "Mỗi ngày" },
-            { korean: "항상", vietnamese: "Luôn luôn" },
-            { korean: "자주", vietnamese: "Thường xuyên" },
-            { korean: "가끔", vietnamese: "Thỉnh thoảng" },
-            { korean: "별로", vietnamese: "Không... lắm" },
-            { korean: "전혀", vietnamese: "Hoàn toàn không" },
-            { korean: "아주", vietnamese: "Rất" },
-            { korean: "정말", vietnamese: "Thật sự" },
-            { korean: "너무", vietnamese: "Quá (thường mang nghĩa tiêu cực)" },
-            { korean: "더", vietnamese: "Hơn nữa" },
-            { korean: "덜", vietnamese: "Ít hơn" },
-            { korean: "같이", vietnamese: "Cùng nhau" },
-            { korean: "혼자", vietnamese: "Một mình" },
-            { korean: "여기", vietnamese: "Ở đây" },
-            { korean: "저기", vietnamese: "Ở đằng kia" },
-            { korean: "거기", vietnamese: "Ở đó" },
-            { korean: "어디", vietnamese: "Ở đâu" },
-            { korean: "위", vietnamese: "Trên" },
-            { korean: "아래", vietnamese: "Dưới" },
-            { korean: "앞", vietnamese: "Trước" },
-            { korean: "뒤", vietnamese: "Sau" },
-            { korean: "안", vietnamese: "Trong" },
-            { korean: "밖", vietnamese: "Ngoài" },
-            { korean: "오른쪽", vietnamese: "Bên phải" },
-            { korean: "왼쪽", vietnamese: "Bên trái" },
-            { korean: "옆", vietnamese: "Bên cạnh" },
-            { korean: "사이", vietnamese: "Giữa" },
-            { korean: "하나", vietnamese: "Một" },
-            { korean: "둘", vietnamese: "Hai" },
-            { korean: "셋", vietnamese: "Ba" },
-            { korean: "넷", vietnamese: "Bốn" },
-            { korean: "다섯", vietnamese: "Năm" },
-            { korean: "여섯", vietnamese: "Sáu" },
-            { korean: "일곱", vietnamese: "Bảy" },
-            { korean: "여덟", vietnamese: "Tám" },
-            { korean: "아홉", vietnamese: "Chín" },
-            { korean: "열", vietnamese: "Mười" },
-            { korean: "스물", vietnamese: "Hai mươi" },
-            { korean: "서른", vietnamese: "Ba mươi" },
-            { korean: "마흔", vietnamese: "Bốn mươi" },
-            { korean: "쉰", vietnamese: "Năm mươi" },
-            { korean: "영/공", vietnamese: "Không" },
-            { korean: "일", vietnamese: "Một (Hán-Hàn)" },
-            { korean: "이", vietnamese: "Hai (Hán-Hàn)" },
-            { korean: "삼", vietnamese: "Ba (Hán-Hàn)" },
-            { korean: "사", vietnamese: "Bốn (Hán-Hàn)" },
-            { korean: "오", vietnamese: "Năm (Hán-Hàn)" },
-            { korean: "육", vietnamese: "Sáu (Hán-Hàn)" },
-            { korean: "칠", vietnamese: "Bảy (Hán-Hàn)" },
-            { korean: "팔", vietnamese: "Tám (Hán-Hàn)" },
-            { korean: "구", vietnamese: "Chín (Hán-Hàn)" },
-            { korean: "십", vietnamese: "Mười (Hán-Hàn)" },
-            { korean: "백", vietnamese: "Một trăm" },
-            { korean: "천", vietnamese: "Một nghìn" },
-            { korean: "만", vietnamese: "Một vạn (mười nghìn)" },
-            { korean: "수요일", vietnamese: "Thứ Tư" },
-            { korean: "목요일", vietnamese: "Thứ Năm" },
-            { korean: "금요일", vietnamese: "Thứ Sáu" },
-            { korean: "토요일", vietnamese: "Thứ Bảy" },
-            { korean: "일요일", vietnamese: "Chủ Nhật" },
-            { korean: "주말", vietnamese: "Cuối tuần" },
-            { korean: "월", vietnamese: "Tháng" },
-            { korean: "일", vietnamese: "Ngày" },
-            { korean: "년", vietnamese: "Năm" },
-            { korean: "오늘", vietnamese: "Hôm nay" },
-            { korean: "어제", vietnamese: "Hôm qua" },
-            { korean: "내일", vietnamese: "Ngày mai" },
-            { korean: "지금", vietnamese: "Bây giờ" },
-            { korean: "아침", vietnamese: "Buổi sáng" },
-            { korean: "점심", vietnamese: "Buổi trưa" },
-            { korean: "저녁", vietnamese: "Buổi tối" },
-            { korean: "밤", vietnamese: "Đêm" },
-            { korean: "새벽", vietnamese: "Rạng sáng" },
-            { korean: "계절", vietnamese: "Mùa" },
-            { korean: "봄", vietnamese: "Mùa xuân" },
-            { korean: "여름", vietnamese: "Mùa hè" },
-            { korean: "가을", vietnamese: "Mùa thu" },
-            { korean: "겨울", vietnamese: "Mùa đông" },
-            { korean: "날씨", vietnamese: "Thời tiết" },
-            { korean: "비", vietnamese: "Mưa" },
-            { korean: "눈", vietnamese: "Tuyết" },
-            { korean: "바람", vietnamese: "Gió" },
-            { korean: "구름", vietnamese: "Mây" },
-            { korean: "안개", vietnamese: "Sương mù" },
-            { korean: "하늘", vietnamese: "Bầu trời" },
-            { korean: "해", vietnamese: "Mặt trời" },
-            { korean: "달", vietnamese: "Mặt trăng" },
-            { korean: "별", vietnamese: "Ngôi sao" },
-            { korean: "덥다", vietnamese: "Nóng" },
-            { korean: "춥다", vietnamese: "Lạnh" },
-            { korean: "따뜻하다", vietnamese: "Ấm áp" },
-            { korean: "시원하다", vietnamese: "Mát mẻ" },
-            { korean: "맑다", vietnamese: "Trong xanh" },
-            { korean: "흐리다", vietnamese: "Âm u" },
-            { korean: "눈이 오다", vietnamese: "Tuyết rơi" },
-            { korean: "비가 오다", vietnamese: "Trời mưa" },
-            { korean: "바람이 불다", vietnamese: "Gió thổi" },
-            { korean: "시간", vietnamese: "Thời gian" },
-            { korean: "분", vietnamese: "Phút" },
-            { korean: "초", vietnamese: "Giây" },
-            { korean: "아침 식사", vietnamese: "Bữa sáng" },
-            { korean: "점심 식사", vietnamese: "Bữa trưa" },
-            { korean: "저녁 식사", vietnamese: "Bữa tối" },
-            { korean: "식사하다", vietnamese: "Ăn cơm" },
-            { korean: "간식", vietnamese: "Đồ ăn vặt" },
-            { korean: "음료수", vietnamese: "Đồ uống" },
-            { korean: "커피", vietnamese: "Cà phê" },
-            { korean: "차", vietnamese: "Trà" },
-            { korean: "물", vietnamese: "Nước" },
-            { korean: "밥", vietnamese: "Cơm" },
-            { korean: "국", vietnamese: "Canh" },
-            { korean: "반찬", vietnamese: "Món ăn kèm" },
-            { korean: "김치", vietnamese: "Kim chi" },
-            { korean: "불고기", vietnamese: "Thịt bò nướng Bulgogi" },
-            { korean: "비빔밥", vietnamese: "Cơm trộn Bibimbap" },
-            { korean: "삼겹살", vietnamese: "Thịt ba chỉ nướng" },
-            { korean: "냉면", vietnamese: "Mì lạnh" },
-            { korean: "찌개", vietnamese: "Món hầm" },
-            { korean: "과일", vietnamese: "Trái cây" },
-            { korean: "사과", vietnamese: "Táo" },
-            { korean: "바나나", vietnamese: "Chuối" },
-            { korean: "오렌지", vietnamese: "Cam" },
-            { korean: "수박", vietnamese: "Dưa hấu" },
-            { korean: "딸기", vietnamese: "Dâu tây" },
-            { korean: "포도", vietnamese: "Nho" },
-            { korean: "귤", vietnamese: "Quýt" },
-            { korean: "빵", vietnamese: "Bánh mì" },
-            { korean: "케이크", vietnamese: "Bánh kem" },
-            { korean: "과자", vietnamese: "Bánh kẹo" },
-            { korean: "사탕", vietnamese: "Kẹo" },
-            { korean: "초콜릿", vietnamese: "Sô cô la" },
-            { korean: "돈", vietnamese: "Tiền" },
-            { korean: "값", vietnamese: "Giá cả" },
-            { korean: "물건", vietnamese: "Đồ vật" },
-            { korean: "가게", vietnamese: "Cửa hàng" },
-            { korean: "시장", vietnamese: "Chợ" },
-            { korean: "백화점", vietnamese: "Trung tâm thương mại" },
-            { korean: "편의점", vietnamese: "Cửa hàng tiện lợi" },
-            { korean: "식당", vietnamese: "Nhà hàng" },
-            { korean: "카페", vietnamese: "Quán cà phê" },
-            { korean: "서점", vietnamese: "Hiệu sách" },
-            { korean: "옷가게", vietnamese: "Cửa hàng quần áo" },
-            { korean: "신발가게", vietnamese: "Cửa hàng giày" },
-            { korean: "모자", vietnamese: "Mũ" },
-            { korean: "옷", vietnamese: "Quần áo" },
-            { korean: "바지", vietnamese: "Quần" },
-            { korean: "치마", vietnamese: "Váy" },
-            { korean: "티셔츠", vietnamese: "Áo thun" },
-            { korean: "와이셔츠", vietnamese: "Áo sơ mi" },
-            { korean: "코트", vietnamese: "Áo khoác" },
-            { korean: "양말", vietnamese: "Tất" },
-            { korean: "장갑", vietnamese: "Găng tay" },
-            { korean: "가방", vietnamese: "Túi xách" },
-            { korean: "지갑", vietnamese: "Ví" },
-            { korean: "안경", vietnamese: "Kính" },
-            { korean: "시계", vietnamese: "Đồng hồ" },
-            { korean: "목걸이", vietnamese: "Vòng cổ" },
-            { korean: "귀걸이", vietnamese: "Bông tai" },
-            { korean: "반지", vietnamese: "Nhẫn" },
-            { korean: "팔찌", vietnamese: "Vòng tay" },
-            { korean: "색깔", vietnamese: "Màu sắc" },
-            { korean: "빨간색", vietnamese: "Màu đỏ" },
-            { korean: "파란색", vietnamese: "Màu xanh dương" },
-            { korean: "노란색", vietnamese: "Màu vàng" },
-            { korean: "초록색", vietnamese: "Màu xanh lá" },
-            { korean: "하얀색", vietnamese: "Màu trắng" },
-            { korean: "검은색", vietnamese: "Màu đen" },
-            { korean: "갈색", vietnamese: "Màu nâu" },
-            { korean: "회색", vietnamese: "Màu xám" },
-            { korean: "분홍색", vietnamese: "Màu hồng" },
-            { korean: "보라색", vietnamese: "Màu tím" },
-            { korean: "주황색", vietnamese: "Màu cam" },
-            { korean: "다리", vietnamese: "Chân, cầu" },
-            { korean: "손", vietnamese: "Tay" },
-            { korean: "발", vietnamese: "Bàn chân" },
-            { korean: "얼굴", vietnamese: "Mặt" },
-            { korean: "눈", vietnamese: "Mắt" },
-            { korean: "코", vietnamese: "Mũi" },
-            { korean: "입", vietnamese: "Miệng" },
-            { korean: "머리", vietnamese: "Đầu, tóc" },
-            { korean: "귀", vietnamese: "Tai" },
-            { korean: "이", vietnamese: "Răng" },
-            { korean: "배", vietnamese: "Bụng" },
-            { korean: "등", vietnamese: "Lưng" },
-            { korean: "어깨", vietnamese: "Vai" },
-            { korean: "팔", vietnamese: "Cánh tay" },
-            { korean: "손가락", vietnamese: "Ngón tay" },
-            { korean: "발가락", vietnamese: "Ngón chân" },
-            { korean: "몸", vietnamese: "Cơ thể" },
-            { korean: "병원", vietnamese: "Bệnh viện" },
-            { korean: "의사", vietnamese: "Bác sĩ" },
-            { korean: "간호사", vietnamese: "Y tá" },
-            { korean: "약", vietnamese: "Thuốc" },
-            { korean: "약국", vietnamese: "Hiệu thuốc" },
-            { korean: "감기", vietnamese: "Cảm cúm" },
-            { korean: "열", vietnamese: "Sốt" },
-            { korean: "기침", vietnamese: "Ho" },
-            { korean: "두통", vietnamese: "Đau đầu" },
-            { korean: "배탈", vietnamese: "Đau bụng" },
-            { korean: "치과", vietnamese: "Nha khoa" },
-            { korean: "치과 의사", vietnamese: "Nha sĩ" },
-            { korean: "건강하다", vietnamese: "Khỏe mạnh" },
-            { korean: "아프다", vietnamese: "Bị ốm, đau" },
-            { korean: "피곤하다", vietnamese: "Mệt mỏi" },
-            { korean: "졸리다", vietnamese: "Buồn ngủ" },
-            { korean: "배고프다", vietnamese: "Đói bụng" },
-            { korean: "배부르다", vietnamese: "No bụng" },
-            { korean: "목마르다", vietnamese: "Khát nước" },
-            { korean: "운동하다", vietnamese: "Tập thể dục" },
-            { korean: "쉬다", vietnamese: "Nghỉ ngơi" },
-            { korean: "자다", vietnamese: "Ngủ" },
-            { korean: "일어나다", vietnamese: "Thức dậy" },
-            { korean: "씻다", vietnamese: "Rửa" },
-            { korean: "세수하다", vietnamese: "Rửa mặt" },
-            { korean: "이 닦다", vietnamese: "Đánh răng" },
-            { korean: "샤워하다", vietnamese: "Tắm vòi sen" },
-            { korean: "목욕하다", vietnamese: "Tắm bồn" }
-        ];
+<audio id="background-music" loop><source src="https://github.com/tony2tones/freesound-scrape/blob/master/sounds/185799.mp3?raw=true" type="audio/mpeg"></audio>
+<div class="overlay hidden" id="music-prompt-modal"><div class="modal-content"><h2>Chào mừng</h2><p style="margin-bottom: 20px;">Nhấn vào nút bên dưới để vào game và bật nhạc nền.</p><button id="enter-game-btn" class="btn-action">VÀO GAME</button></div></div>
+<div class="overlay" id="auth-overlay"><div class="auth-container"><div id="login-form"><h2>Đăng Nhập</h2><div class="form-group"><input type="text" id="login-username" placeholder="Tên đăng nhập" required></div><button id="login-button">Vào Game</button><p class="toggle-form" id="show-register">Chưa có tài khoản? Đăng ký</p></div><div id="register-form"><h2>Đăng Ký</h2><div class="form-group"><input type="text" id="register-username" placeholder="Tên đăng nhập mới" required></div><button id="register-button">Đăng Ký & Vào Game</button><p class="toggle-form" id="show-login">Đã có tài khoản? Đăng nhập</p></div></div></div>
 
-        let currentWordIndex = 0;
-        let showMeaning = false;
+<div class="app-container hidden" id="app-container">
+<div class="main-game">
+<div class="game-container">
+<div class="header">
+<div class="user-info"><span id="user-display"></span><div id="money-display">💰 0</div></div>
+<div id="session-display">Phiên 1</div><div id="timer-display">--</div>
+<div class="header-buttons">
+<button class="header-btn" id="deposit-btn">Nạp Tiền</button>
+<button class="header-btn" id="withdraw-btn">Rút Tiền</button>
+<button class="header-btn" id="transaction-history-btn">Lịch sử GD</button>
+<button class="header-btn" id="music-toggle-btn">Tắt Nhạc</button>
+<button class="header-btn" id="nặn-toggle-btn">Bật Nặn</button>
+<button class="header-btn" id="logout-btn">Đăng Xuất</button>
+</div>
+</div>
+<div class="game-mat"><div class="dice-area"><div id="bowl" class="bowl"></div><div id="dice1" class="dice"></div><div id="dice2" class="dice"></div><div id="dice3" class="dice"></div></div></div>
+<div class="roadmap-container"><div id="roadmap-track" class="roadmap-track"></div></div>
+<div class="betting-controls"><button id="bet-xiu" class="bet-option">XỈU</button><input type="text" id="bet-amount" placeholder="Cược" inputmode="numeric"><button id="bet-tai" class="bet-option">TÀI</button></div>
+<div id="result-message">Chuẩn bị ván mới...</div>
+</div>
+</div>
+<div class="history-panel"><h2>LỊCH SỬ CƯỢC</h2><ul id="history-list"></ul><button id="reset-button">RESET DỮ LIỆU</button></div>
+</div>
 
-        const vocabularyCard = document.getElementById('vocabularyCard');
-        const koreanWordDiv = document.getElementById('koreanWord');
-        const vietnameseMeaningDiv = document.getElementById('vietnameseMeaning');
-        const showMeaningBtn = document.getElementById('showMeaningBtn');
-        const readWordBtn = document.getElementById('readWordBtn');
-        const nextWordBtn = document.getElementById('nextWordBtn');
-        const prevWordBtn = document.getElementById('prevWordBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const messageDiv = document.getElementById('message');
-        const progressBar = document.getElementById('progressBar');
+<!-- Modals -->
+<!-- MỚI: Modal nạp tiền chỉ hiển thị thông tin -->
+<div id="deposit-modal" class="modal">
+<div class="modal-content">
+<span class="modal-close" data-modal-id="deposit-modal">×</span>
+<h2>Thông tin nạp tiền</h2>
+<div class="deposit-info">
+<div class="info-line">
+<span class="info-label">Ngân hàng:</span>
+<span class="info-value">MB Bank</span>
+</div>
+<div class="info-line">
+<span class="info-label">STK:</span>
+<span class="info-value">123456789</span>
+</div>
+<div class="info-line">
+<span class="info-label">Chủ TK:</span>
+<span class="info-value">demo</span>
+</div>
+<div class="info-line">
+<span class="info-label">Nội dung:</span>
+<span class="info-value">tnv + [số tiền]</span>
+</div>
+<div class="info-line">
+<img style="width: 50%;hight:50%;margin-left:70px" src="" alt="">
+</div>
+</div>
+</div>
+</div>
 
-        // Speech Synthesis setup
-        const synth = window.speechSynthesis;
-        let koreanVoice = null;
+<div id="withdraw-modal" class="modal"><div class="modal-content"><span class="modal-close" data-modal-id="withdraw-modal">×</span><h2>Rút tiền</h2><div class="form-group"><input type="text" id="withdraw-amount" placeholder="Số tiền (tối thiểu 200,000)"></div><div class="form-group"><input type="text" id="withdraw-bank" placeholder="Tên Ngân hàng (VD: VCB, ACB)"></div><div class="form-group"><input type="text" id="withdraw-account-number" placeholder="Số tài khoản"></div><div class="form-group"><input type="text" id="withdraw-account-name" placeholder="Tên chủ tài khoản"></div><div class="modal-buttons"><button id="confirm-withdraw-btn" class="btn-confirm">Xác nhận</button><button class="btn-cancel" data-modal-id="withdraw-modal">Hủy</button></div></div></div>
+<div id="transaction-history-modal" class="modal"><div class="modal-content"><span class="modal-close" data-modal-id="transaction-history-modal">×</span><h2>Lịch sử Giao dịch</h2><ul id="transaction-history-list"></ul></div></div>
 
-        // Find a Korean voice
-        function setKoreanVoice() {
-            const voices = synth.getVoices();
-            koreanVoice = voices.find(voice => voice.lang === 'ko-KR' || voice.name.includes('Korean'));
-            if (!koreanVoice) {
-                console.warn("Không tìm thấy giọng nói tiếng Hàn. Sẽ sử dụng giọng mặc định.");
-            }
-        }
-
-        setKoreanVoice();
-        if (synth.onvoiceschanged !== undefined) {
-            synth.onvoiceschanged = setKoreanVoice;
-        }
-
-        function readKoreanWord(word) {
-            if (synth.speaking) {
-                synth.cancel(); // Stop any current speech
-            }
-            const utterance = new SpeechSynthesisUtterance(word);
-            utterance.lang = 'ko-KR'; // Ensure Korean language
-            if (koreanVoice) {
-                utterance.voice = koreanVoice;
-            } else {
-                const voices = synth.getVoices();
-                koreanVoice = voices.find(voice => voice.lang.startsWith('ko'));
-                if (koreanVoice) {
-                    utterance.voice = koreanVoice;
-                }
-            }
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            synth.speak(utterance);
-        }
-
-        function updateCard() {
-            const currentWord = vocabulary[currentWordIndex];
-            koreanWordDiv.textContent = currentWord.korean;
-
-            if (showMeaning) {
-                vietnameseMeaningDiv.textContent = currentWord.vietnamese;
-                vocabularyCard.classList.add('show-meaning');
-            } else {
-                vietnameseMeaningDiv.textContent = 'Chạm hoặc nhấn "Hiện Nghĩa" để xem'; // Thêm hướng dẫn khi ẩn nghĩa
-                vocabularyCard.classList.remove('show-meaning');
-            }
-            
-            updateProgressBar();
-            messageDiv.textContent = '';
-        }
-
-        function updateProgressBar() {
-            const progress = ((currentWordIndex + 1) / vocabulary.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
-
-        showMeaningBtn.addEventListener('click', () => {
-            showMeaning = true;
-            updateCard();
-        });
-
-        readWordBtn.addEventListener('click', () => {
-            readKoreanWord(vocabulary[currentWordIndex].korean);
-        });
-
-        koreanWordDiv.addEventListener('click', () => {
-            readKoreanWord(vocabulary[currentWordIndex].korean);
-        });
-
-        nextWordBtn.addEventListener('click', () => {
-            if (currentWordIndex < vocabulary.length - 1) {
-                currentWordIndex++;
-                showMeaning = false;
-                updateCard();
-            } else {
-                messageDiv.textContent = 'Bạn đã hoàn thành tất cả từ vựng!';
-            }
-        });
-
-        prevWordBtn.addEventListener('click', () => {
-            if (currentWordIndex > 0) {
-                currentWordIndex--;
-                showMeaning = false;
-                updateCard();
-            } else {
-                messageDiv.textContent = 'Đây là từ đầu tiên.';
-            }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            currentWordIndex = 0;
-            showMeaning = false;
-            updateCard();
-            messageDiv.textContent = 'Đã làm lại từ đầu.';
-        });
-
-        // Initialize on load
-        updateCard();
-    </script>
-<!-- Code injected by live-server -->
 <script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
+document.addEventListener('DOMContentLoaded', () => {
+
+// --- DOM Elements ---
+const moneyDisplay = document.getElementById('money-display'), sessionDisplay = document.getElementById('session-display'), timerDisplay = document.getElementById('timer-display'), betXiuButton = document.getElementById('bet-xiu'), betTaiButton = document.getElementById('bet-tai'), betAmountInput = document.getElementById('bet-amount'), resultMessage = document.getElementById('result-message'), bowl = document.getElementById('bowl'), allDice = [document.getElementById('dice1'), document.getElementById('dice2'), document.getElementById('dice3')], historyList = document.getElementById('history-list'), roadmapTrack = document.getElementById('roadmap-track'), resetButton = document.getElementById('reset-button'), appContainer = document.getElementById('app-container'), authOverlay = document.getElementById('auth-overlay'), loginForm = document.getElementById('login-form'), registerForm = document.getElementById('register-form'), loginButton = document.getElementById('login-button'), registerButton = document.getElementById('register-button'), loginUsernameInput = document.getElementById('login-username'), registerUsernameInput = document.getElementById('register-username'), userDisplay = document.getElementById('user-display'), logoutBtn = document.getElementById('logout-btn'), showRegisterBtn = document.getElementById('show-register'), showLoginBtn = document.getElementById('show-login'), backgroundMusic = document.getElementById('background-music'), musicToggleBtn = document.getElementById('music-toggle-btn'), musicPromptModal = document.getElementById('music-prompt-modal'), enterGameBtn = document.getElementById('enter-game-btn'), depositBtn = document.getElementById('deposit-btn'), withdrawBtn = document.getElementById('withdraw-btn'), transactionHistoryBtn = document.getElementById('transaction-history-btn'), confirmWithdrawBtn = document.getElementById('confirm-withdraw-btn'), withdrawAmountInput = document.getElementById('withdraw-amount'), transactionHistoryList = document.getElementById('transaction-history-list');
+const withdrawBankInput = document.getElementById('withdraw-bank'), withdrawAccountNumberInput = document.getElementById('withdraw-account-number'), withdrawAccountNameInput = document.getElementById('withdraw-account-name');
+const nặnToggleBtn = document.getElementById('nặn-toggle-btn');
+
+// --- State ---
+let money, history, transactions, sessionRoundCount, currentBet = null, isShaking = false, countdown, timerInterval, currentUser;
+let isNặnMode = false, roundResultData = null, isDragging = false, dragStartX, dragStartY, bowlInitialX, bowlInitialY;
+const STARTING_MONEY = 100000, ROUND_DURATION = 30, LOCK_BET_TIME = 5, NEW_ROUND_DELAY = 5000, MIN_WITHDRAW = 200000;
+const SESSION_LENGTH = 5; // MỚI: Giới hạn cầu là 5
+const formatVNCurrency = (num) => num.toLocaleString('vi-VN');
+
+// --- Auth & Music Flow ---
+function showLoginForm() { loginForm.style.display = 'block'; registerForm.style.display = 'none'; }
+function showRegisterForm() { loginForm.style.display = 'none'; registerForm.style.display = 'block'; }
+function handleLogin() { const username = loginUsernameInput.value.trim(); if (!username) { alert('Vui lòng nhập tên đăng nhập.'); return; } if (localStorage.getItem(`taixiu_user_${username}`)) { currentUser = username; localStorage.setItem('taixiu_currentUser', currentUser); authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); } else { alert('Tên đăng nhập không tồn tại.'); } }
+function handleRegister() { const username = registerUsernameInput.value.trim(); if (!username) { alert('Vui lòng nhập tên đăng nhập.'); return; } if (localStorage.getItem(`taixiu_user_${username}`)) { alert('Tên đăng nhập đã tồn tại.'); return; } const newUserData = { money: STARTING_MONEY, history: [], transactions: [], sessionRoundCount: 0, isNặnMode: false }; localStorage.setItem(`taixiu_user_${username}`, JSON.stringify(newUserData)); currentUser = username; localStorage.setItem('taixiu_currentUser', currentUser); authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); }
+function handleLogout() { if (confirm('Bạn có chắc muốn đăng xuất?')) { localStorage.removeItem('taixiu_currentUser'); location.reload(); } }
+function checkLoggedInUser() { const loggedInUser = localStorage.getItem('taixiu_currentUser'); if (loggedInUser && localStorage.getItem(`taixiu_user_${loggedInUser}`)) { currentUser = loggedInUser; authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); } else { authOverlay.classList.remove('hidden'); musicPromptModal.classList.add('hidden'); } }
+function launchGame() { musicPromptModal.classList.add('hidden'); appContainer.classList.remove('hidden'); initializeGame(); }
+function toggleMusic(forcePlay = false) { if (forcePlay) { backgroundMusic.play().catch(e => console.error("Lỗi phát nhạc:", e)); musicToggleBtn.textContent = 'Tắt Nhạc'; return; } if (backgroundMusic.paused) { backgroundMusic.play(); musicToggleBtn.textContent = 'Tắt Nhạc'; } else { backgroundMusic.pause(); musicToggleBtn.textContent = 'Bật Nhạc'; } }
+
+// --- Giao dịch & Nặn Bát ---
+function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+function addTransaction(transactionObject) { transactions.unshift(transactionObject); if (transactions.length > 100) transactions.pop(); }
+function handleWithdraw() {
+const amount = parseFormattedNumber(withdrawAmountInput.value);
+if (isNaN(amount) || amount < MIN_WITHDRAW) { alert(`Số tiền rút tối thiểu là ${formatVNCurrency(MIN_WITHDRAW)} VNĐ.`); return; }
+if (amount > money) { alert('Số tiền rút không được lớn hơn số dư!'); return; }
+const bank = withdrawBankInput.value.trim(), accountNumber = withdrawAccountNumberInput.value.trim(), accountName = withdrawAccountNameInput.value.trim();
+if (!bank || !accountNumber || !accountName) { alert('Vui lòng điền đầy đủ thông tin ngân hàng.'); return; }
+money -= amount;
+addTransaction({ type: 'withdraw', amount, timestamp: Date.now(), details: { bank, accountNumber, accountName } });
+saveGameData(); updateAllUI(); closeModal('withdraw-modal');
+[withdrawAmountInput, withdrawBankInput, withdrawAccountNumberInput, withdrawAccountNameInput].forEach(input => input.value = '');
+alert(`Yêu cầu rút ${formatVNCurrency(amount)} đã được gửi đi!`);
+}
+function toggleNặnMode() { isNặnMode = !isNặnMode; nặnToggleBtn.textContent = isNặnMode ? 'Tắt Nặn' : 'Bật Nặn'; nặnToggleBtn.classList.toggle('active', isNặnMode); saveGameData(); }
+
+// --- Khởi tạo & Gán sự kiện ---
+function initializeGame() { loadGameData(); updateAllUI(); startNewRound(); toggleMusic(true); }
+function setupAllEventListeners() {
+loginButton.addEventListener('click', handleLogin); registerButton.addEventListener('click', handleRegister);
+showRegisterBtn.addEventListener('click', showRegisterForm); showLoginBtn.addEventListener('click', showLoginForm);
+enterGameBtn.addEventListener('click', launchGame);
+betXiuButton.addEventListener('click', () => selectBet('xiu')); betTaiButton.addEventListener('click', () => selectBet('tai'));
+resetButton.addEventListener('click', resetGameData);
+betAmountInput.addEventListener('input', handleBetInputFormatting);
+logoutBtn.addEventListener('click', handleLogout); musicToggleBtn.addEventListener('click', () => toggleMusic());
+nặnToggleBtn.addEventListener('click', toggleNặnMode);
+depositBtn.addEventListener('click', () => openModal('deposit-modal'));
+withdrawBtn.addEventListener('click', () => openModal('withdraw-modal'));
+transactionHistoryBtn.addEventListener('click', () => { updateTransactionHistoryUI(); openModal('transaction-history-modal'); });
+confirmWithdrawBtn.addEventListener('click', handleWithdraw);
+document.querySelectorAll('.modal-close, .btn-cancel').forEach(el => { el.addEventListener('click', () => closeModal(el.dataset.modalId)); });
+
+// Sự kiện kéo bát
+bowl.addEventListener('mousedown', onDragStart); bowl.addEventListener('touchstart', onDragStart, { passive: true });
+document.addEventListener('mousemove', onDragMove); document.addEventListener('touchmove', onDragMove, { passive: false });
+document.addEventListener('mouseup', onDragEnd); document.addEventListener('touchend', onDragEnd);
+}
+
+// --- Logic Kéo Bát (Nặn) ---
+function onDragStart(event) {
+if (!bowl.classList.contains('ready-to-nặn') || isDragging) return;
+isDragging = true;
+const clientX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
+const clientY = event.type === 'touchstart' ? event.touches[0].clientY : event.clientY;
+dragStartX = clientX; dragStartY = clientY;
+const computedStyle = window.getComputedStyle(bowl);
+const transform = new DOMMatrix(computedStyle.transform);
+bowlInitialX = transform.m41; bowlInitialY = transform.m42;
+bowl.style.transition = 'none'; // Tắt transition để kéo mượt
+}
+function onDragMove(event) {
+if (!isDragging) return;
+event.preventDefault();
+const clientX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
+const clientY = event.type === 'touchmove' ? event.touches[0].clientY : event.clientY;
+const deltaX = clientX - dragStartX;
+const deltaY = clientY - dragStartY;
+bowl.style.transform = `translate(${bowlInitialX + deltaX}px, ${bowlInitialY + deltaY}px)`;
+}
+function onDragEnd() {
+if (!isDragging) return;
+isDragging = false;
+bowl.classList.remove('ready-to-nặn');
+bowl.style.transition = 'transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; // Bật lại transition
+bowl.classList.add('revealed');
+finalizeRound(roundResultData);
+}
+
+// --- Game Loop & Logic ---
+function startNewRound() { clearTimeout(timerInterval); isShaking = false; countdown = ROUND_DURATION; resetRoundUI(); if (sessionRoundCount >= SESSION_LENGTH) { sessionRoundCount = 0; roadmapTrack.classList.add('clearing'); setTimeout(() => { roadmapTrack.innerHTML = ''; roadmapTrack.classList.remove('clearing'); }, 300); } tick(); timerInterval = setInterval(tick, 1000); }
+function tick() { updateTimerDisplay(); if (countdown <= LOCK_BET_TIME && countdown > 0) lockBetting(); if (countdown <= 0) { clearInterval(timerInterval); runShakeSequence(); } countdown--; }
+function runShakeSequence() {
+const betAmount = parseFormattedNumber(betAmountInput.value);
+if (isShaking) return;
+if (currentBet && betAmount > money) { showError("Không đủ tiền cược!"); currentBet = null; betAmountInput.value = ''; betTaiButton.classList.remove('active-bet'); betXiuButton.classList.remove('active-bet'); return; }
+isShaking = true; resetRoundVisuals();
+setTimeout(() => { let shakeCount = 0; const shakeInterval = setInterval(() => { bowl.classList.add('shaking'); setTimeout(() => bowl.classList.remove('shaking'), 400); shakeCount++; if (shakeCount >= 3) { clearInterval(shakeInterval); setTimeout(() => revealResult(betAmount), 500); } }, 600); }, 500);
+}
+function revealResult(betAmount) {
+const [d1, d2, d3] = [1, 2, 3].map(() => Math.floor(Math.random() * 6) + 1); const total = d1 + d2 + d3;
+let gameResultType = (total <= 10) ? 'xiu' : 'tai', winnings = 0;
+if (currentBet && betAmount > 0) {
+if (gameResultType !== currentBet) { winnings = -betAmount; } else { winnings = betAmount; }
+}
+roundResultData = { gameResultType, total, diceValues: [d1, d2, d3], betAmount, winnings };
+positionAndShowDice(roundResultData.diceValues);
+if (isNặnMode) {
+bowl.classList.add('ready-to-nặn');
+resultMessage.textContent = 'Mời bạn nặn bát...';
+} else {
+bowl.classList.add('revealed');
+finalizeRound(roundResultData);
+}
+}
+function finalizeRound(resultData) {
+money += resultData.winnings; sessionRoundCount++;
+updateHistory(resultData.gameResultType, resultData.total, resultData.diceValues, resultData.betAmount, resultData.winnings);
+resultMessage.textContent = `Kết quả: ${resultData.total}Đ - ${resultData.gameResultType.toUpperCase()}!`;
+saveGameData(); updateAllUI(); setTimeout(startNewRound, NEW_ROUND_DELAY);
+}
+
+// --- UI & Data Functions ---
+function selectBet(betType) { if (isShaking || countdown <= LOCK_BET_TIME || bowl.classList.contains('ready-to-nặn')) return; currentBet = betType; betTaiButton.classList.toggle('active-bet', betType === 'tai'); betXiuButton.classList.toggle('active-bet', betType === 'xiu'); }
+function lockBetting() { betAmountInput.disabled = true; betTaiButton.disabled = true; betXiuButton.disabled = true; if (countdown === LOCK_BET_TIME) resultMessage.textContent = "Hết giờ cược!"; }
+function resetRoundUI() { bowl.className = 'bowl'; bowl.style.transform = 'translate(-50%, -50%)'; allDice.forEach(d => { d.className = 'dice'; }); betTaiButton.classList.remove('active-bet'); betXiuButton.classList.remove('active-bet'); betAmountInput.value = ''; currentBet = null; betAmountInput.disabled = false; betTaiButton.disabled = false; betXiuButton.disabled = false; resultMessage.textContent = 'Mời đặt cược...'; updateSessionDisplay(); roundResultData = null; }
+function resetRoundVisuals() { bowl.className = 'bowl'; bowl.style.transform = 'translate(-50%, -50%)'; allDice.forEach(d => { d.className = 'dice'; }); resultMessage.textContent = 'Đang xóc...'; }
+function updateTimerDisplay() { timerDisplay.textContent = countdown >= 0 ? countdown : 0; timerDisplay.classList.toggle('locked', countdown <= LOCK_BET_TIME); }
+function positionAndShowDice([v1, v2, v3]) {
+const values = [v1, v2, v3];
+const endPositions = [{ top: '50%', left: '25%' }, { top: '25%', left: '50%' }, { top: '75%', left: '50%' }];
+allDice.forEach((dice, i) => {
+dice.className = 'dice visible'; updateDiceUI(dice, values[i]);
+dice.style.top = endPositions[i].top; dice.style.left = endPositions[i].left;
+dice.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+});
+}
+function updateDiceUI(diceEl, value) { diceEl.classList.add(`face-${value}`); diceEl.innerHTML = Array(value).fill('<div class="dot"></div>').join(''); }
+function handleBetInputFormatting(e) { const input = e.target; let rawValue = input.value.replace(/[^0-9]/g, ''); if (parseFormattedNumber(rawValue) > money) { rawValue = String(money); } input.value = rawValue.length > 0 ? formatVNCurrency(parseFormattedNumber(rawValue)) : ''; }
+function parseFormattedNumber(formattedString) { return parseInt(String(formattedString).replace(/[^0-9]/g, ''), 10) || 0; }
+function loadGameData() {
+const userData = JSON.parse(localStorage.getItem(`taixiu_user_${currentUser}`));
+money = userData.money || 0; history = userData.history || []; transactions = userData.transactions || [];
+sessionRoundCount = userData.sessionRoundCount || 0; isNặnMode = userData.isNặnMode || false;
+}
+function saveGameData() { const userData = { money, history, transactions, sessionRoundCount, isNặnMode }; localStorage.setItem(`taixiu_user_${currentUser}`, JSON.stringify(userData)); }
+function resetGameData() { if (confirm('Bạn có chắc muốn reset toàn bộ dữ liệu?')) { const newUserData = { money: STARTING_MONEY, history: [], transactions: [], sessionRoundCount: 0, isNặnMode: false }; localStorage.setItem(`taixiu_user_${currentUser}`, JSON.stringify(newUserData)); location.reload(); } }
+function updateHistory(result, total, diceValues, betAmount, winnings) { history.unshift({ result, total, diceValues, betAmount, winnings, id: Date.now() }); if (history.length > 50) history.pop(); }
+function updateAllUI() { userDisplay.textContent = `Chào, ${currentUser}!`; updateMoneyDisplay(); updateHistoryUI(); renderFullRoadmap(); updateSessionDisplay(); nặnToggleBtn.textContent = isNặnMode ? 'Tắt Nặn' : 'Bật Nặn'; nặnToggleBtn.classList.toggle('active', isNặnMode); }
+function updateSessionDisplay() { sessionDisplay.textContent = `Phiên ${sessionRoundCount + 1 > SESSION_LENGTH ? 1 : sessionRoundCount + 1}`; }
+function updateHistoryUI() {
+historyList.innerHTML = history.length === 0 ? '<li style="text-align:center; opacity:0.5;">Chưa có lịch sử</li>'
+: history.map(entry => { const resultText = entry.result.charAt(0).toUpperCase() + entry.result.slice(1); let winningsHtml = entry.betAmount > 0 ? `<span class="winnings ${entry.winnings >= 0 ? 'win' : 'loss'}">${entry.winnings >= 0 ? '+' : ''}${formatVNCurrency(entry.winnings)}</span>` : `<span class="winnings">--</span>`; return `<li class="history-item"><span class="result ${entry.result}">${resultText}</span><span class="total">${entry.total}</span><span class="dice-details">${entry.diceValues.join('-')}</span>${winningsHtml}</li>`; }).join('');
+}
+function renderFullRoadmap() { roadmapTrack.innerHTML = ''; const roadmapHistory = history.slice(0, 20).reverse(); roadmapHistory.forEach(entry => { const letter = entry.result === 'tai' ? 'T' : 'X'; const roadmapItem = document.createElement('div'); roadmapItem.className = `roadmap-item ${entry.result}`; roadmapItem.textContent = letter; roadmapTrack.appendChild(roadmapItem); }); }
+function updateMoneyDisplay() { moneyDisplay.innerHTML = `💰 ${formatVNCurrency(money)}`; }
+function showError(message) { resultMessage.textContent = message; resultMessage.style.color = 'var(--color-loss)'; betAmountInput.classList.add('input-error'); setTimeout(() => { resultMessage.style.color = 'var(--text-light)'; betAmountInput.classList.remove('input-error'); }, 1500); }
+function updateTransactionHistoryUI() {
+transactionHistoryList.innerHTML = transactions.length === 0 ? '<li style="text-align:center; opacity:0.5;">Chưa có giao dịch</li>'
+: transactions.map(t => { let detailsHtml = ''; if (t.type === 'withdraw' && t.details) { detailsHtml = `<div class="transaction-details"><div><span class="detail-label">Ngân hàng:</span> ${t.details.bank}</div><div><span class="detail-label">STK:</span> ${t.details.accountNumber}</div><div><span class="detail-label">Người nhận:</span> ${t.details.accountName}</div></div>`; } return `<li class="transaction-item ${t.type}"><div class="main-info"><div class="info"><div class="type">${t.type === 'deposit' ? 'Nạp tiền' : 'Rút tiền'}</div><div class="time">${new Date(t.timestamp).toLocaleString('vi-VN')}</div></div><div class="amount">${t.type === 'deposit' ? '+' : '-'}${formatVNCurrency(t.amount)}</div></div>${detailsHtml}</li>`; }).join('');
+}
+
+// --- App Entry Point ---
+function main() { setupAllEventListeners(); checkLoggedInUser(); }
+main();0
+
+});
 </script>
 </body>
 </html>
+
