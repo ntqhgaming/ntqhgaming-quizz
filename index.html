@@ -1,376 +1,306 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Tài Xỉu - Nặn Bát (UI Refined)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
---bg-color: #1a1a2e;
---container-bg: rgba(26, 26, 46, 0.7);
---mat-bg: #16213e;
---accent-gold: #e9b384;
---text-light: #e0fbfc;
---color-tai: #ff4848;
---color-xiu: #48a9ff;
---color-win: #2ecc71;
---color-loss: #e74c3c;
---border-color: rgba(233, 179, 132, 0.3);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếng Hàn Sơ Cấp 1 by NTQH</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
 
-/* --- Cài đặt cơ bản & Nền --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg-color); background-image: linear-gradient(315deg, #1a1a2e 0%, #16213e 74%); color: var(--text-light); padding: 20px; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
 
-/* --- Overlay & Modals --- */
-.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.3s ease; }
-.auth-container, .modal-content { background: var(--container-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center; }
-.auth-container h2, .modal-content h2 { color: var(--accent-gold); margin-bottom: 20px; }
-.auth-container input, .modal-content input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-size: 1em; }
-.auth-container button, .modal-content button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: background 0.2s; }
-.auth-container button, .modal-content .btn-action { background: var(--accent-gold); color: var(--bg-color); }
-.auth-container button:hover, .modal-content .btn-action:hover { background: #d8a26f; }
-.auth-container .toggle-form { margin-top: 15px; color: var(--accent-gold); cursor: pointer; text-decoration: underline; }
-#register-form { display: none; }
-.hidden { display: none !important; opacity: 0; visibility: hidden; }
+        .container {
+            background: var(--card);
+            width: 95%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
 
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 900; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
-.modal.active { opacity: 1; visibility: visible; }
-.modal-content { position: relative; }
-.modal-content .form-group { margin-bottom: 15px; }
-.modal-content .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-.modal-content .btn-confirm { flex-grow: 1; background: var(--color-win); color: white; }
-.modal-content .btn-cancel { flex-grow: 1; background: #7f8c8d; color: white; }
-.modal-close { position: absolute; top: 10px; right: 15px; font-size: 2em; color: white; cursor: pointer; }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
 
-/* --- Kiểu cho Lịch sử GD --- */
-#transaction-history-list { list-style: none; max-height: 400px; overflow-y: auto; padding-right: 10px; text-align: left; }
-.transaction-item { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-.transaction-item .main-info { display: flex; justify-content: space-between; align-items: center; }
-.transaction-item .info .type { font-weight: bold; }
-.transaction-item .info .time { font-size: 0.8em; opacity: 0.7; }
-.transaction-item .amount { font-weight: bold; font-size: 1.1em;}
-.transaction-item.deposit .amount { color: var(--color-win); }
-.transaction-item.withdraw .amount { color: var(--color-loss); }
-.transaction-details { border-top: 1px solid var(--border-color); margin-top: 8px; padding-top: 8px; font-size: 0.85em; opacity: 0.9; text-align: left; }
-.transaction-details div { margin-bottom: 4px; }
-.transaction-details .detail-label { font-weight: bold; color: var(--accent-gold); min-width: 110px; display: inline-block; }
+        .selector-group { margin-bottom: 20px; }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+            background: #fff;
+        }
 
-/* --- MỚI: Kiểu cho thông tin nạp tiền --- */
-.deposit-info { text-align: left; font-size: 1.1em; line-height: 1.8; }
-.deposit-info .info-line { border-bottom: 1px solid var(--border-color); padding: 8px 0; }
-.deposit-info .info-line:last-child { border-bottom: none; }
-.deposit-info .info-label { font-weight: bold; color: var(--accent-gold); min-width: 100px; display: inline-block; }
-.deposit-info .info-value { color: var(--text-light); word-break: break-all; }
+        .lesson-info {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+        }
 
-/* --- Bố cục chính & Header --- */
-.app-container { display: flex; gap: 20px; width: 100%; max-width: 950px; }
-.main-game { flex-grow: 1; }
-.game-container { width: 100%; background: var(--container-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); text-align: center; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; flex-wrap: wrap; gap: 10px;}
-.user-info { display: flex; align-items: center; gap: 15px; }
-#user-display { font-weight: 600; }
-#money-display { font-size: 1.5em; font-weight: 700; color: #fff; background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 10px; }
-#session-display { font-size: 1.2em; font-weight: 600; color: var(--accent-gold); }
-#timer-display { width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.2); border: 3px solid var(--color-win); display: flex; justify-content: center; align-items: center; font-size: 2.2em; font-weight: 700; color: #fff; transition: all 0.3s ease; }
-#timer-display.locked { border-color: var(--color-loss); box-shadow: 0 0 15px var(--color-loss); animation: pulse 1s infinite; }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-.header-buttons { display: flex; gap: 8px; margin-top: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
-.header-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent-gold); background: transparent; color: var(--accent-gold); cursor: pointer; transition: all 0.2s; font-size: 0.9em; }
-.header-btn:hover { background: var(--accent-gold); color: var(--bg-color); }
-.header-btn.active { background-color: var(--accent-gold); color: var(--bg-color); box-shadow: 0 0 10px var(--accent-gold); }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
 
-/* --- Cải tiến Bát, Xúc xắc & Nặn --- */
-.game-mat { width: 100%; height: 220px; background-color: var(--mat-bg); border: 2px solid var(--border-color); border-radius: 15px; margin: 0 auto 20px auto; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
-.dice-area { position: relative; width: 180px; height: 180px; }
-.bowl { width: 190px; height: 190px; background: radial-gradient(circle at 50% 50%, #8a8a9e, #2a2a3e 70%); border: 3px solid #b8860b; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; cursor: default; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); user-select: none; }
-.bowl.ready-to-nặn { cursor: grab; }
-.bowl.ready-to-nặn:active { cursor: grabbing; }
-.bowl.revealed { transform: translate(150%, -50%) !important; }
-.bowl.shaking { animation: shake-animation 0.5s infinite; }
-@keyframes shake-animation { 0%{transform:translate(-50%,-50%) rotate(0deg)} 25%{transform:translate(-52%,-52%) rotate(-5deg)} 50%{transform:translate(-48%,-48%) rotate(5deg)} 75%{transform:translate(-51%,-51%) rotate(-3deg)} 100%{transform:translate(-49%,-49%) rotate(3deg)} }
-.dice { width: 45px; height: 45px; background-color: #fff8e1; border-radius: 6px; position: absolute; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 5px; opacity: 0; z-index: 5; /* Thấp hơn bát */ }
-.dice.visible { opacity: 1; transition: opacity 0.2s; }
-.dot { width: 9px; height: 9px; background-color: #c0392b; border-radius: 50%; align-self: center; justify-self: center; }
-.face-1 .dot:nth-child(1){grid-area:2/2}.face-2 .dot:nth-child(1){grid-area:1/1}.face-2 .dot:nth-child(2){grid-area:3/3}.face-3 .dot:nth-child(1){grid-area:1/1}.face-3 .dot:nth-child(2){grid-area:2/2}.face-3 .dot:nth-child(3){grid-area:3/3}.face-4 .dot:nth-child(1){grid-area:1/1}.face-4 .dot:nth-child(2){grid-area:1/3}.face-4 .dot:nth-child(3){grid-area:3/1}.face-4 .dot:nth-child(4){grid-area:3/3}.face-5 .dot:nth-child(1){grid-area:1/1}.face-5 .dot:nth-child(2){grid-area:1/3}.face-5 .dot:nth-child(3){grid-area:2/2}.face-5 .dot:nth-child(4){grid-area:3/1}.face-5 .dot:nth-child(5){grid-area:3/3}.face-6 .dot:nth-child(1){grid-area:1/1}.face-6 .dot:nth-child(2){grid-area:1/3}.face-6 .dot:nth-child(3){grid-area:2/1}.face-6 .dot:nth-child(4){grid-area:2/3}.face-6 .dot:nth-child(5){grid-area:3/1}.face-6 .dot:nth-child(6){grid-area:3/3}
-.roadmap-container { width: 100%; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-.roadmap-track { display: flex; justify-content: flex-start; gap: 8px; transition: opacity 0.3s ease; }
-.roadmap-track.clearing { opacity: 0; }
-.roadmap-item { width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.2em; color: #fff; flex-shrink: 0; animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-@keyframes pop-in { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.roadmap-item.tai { background-color: var(--color-tai); } .roadmap-item.xiu { background-color: var(--color-xiu); }
-.betting-controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; }
-.bet-option { flex-grow: 1; padding: 15px 20px; font-size: 1.5em; font-weight: bold; border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-.bet-option:disabled { cursor: not-allowed; filter: grayscale(80%); opacity: 0.7; }
-#bet-xiu { background: linear-gradient(145deg, #4da8ff, var(--color-xiu)); }
-#bet-tai { background: linear-gradient(145deg, #ff6b6b, var(--color-tai)); }
-.bet-option:hover:not(:disabled) { transform: translateY(-3px); }
-.bet-option.active-bet { border-color: var(--accent-gold); transform: scale(1.05); box-shadow: 0 0 20px var(--accent-gold); }
-#bet-amount { width: 150px; padding: 14px; font-size: 1.5em; text-align: center; border: 2px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: #fff; border-radius: 10px; font-weight: bold; transition: all 0.2s; }
-#bet-amount:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold); }
-#bet-amount:disabled { background: #555; cursor: not-allowed; }
-#bet-amount.input-error { animation: input-shake 0.4s; border-color: var(--color-loss); }
-@keyframes input-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
-#result-message { height: 40px; font-size: 1.2em; font-weight: bold; color: var(--text-light); display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
-.history-panel { width: 350px; flex-shrink: 0; background: var(--container-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); display: flex; flex-direction: column; max-height: 750px; }
-.history-panel h2 { text-align: center; color: var(--accent-gold); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-#history-list { list-style: none; overflow-y: auto; flex-grow: 1; padding-right: 10px; }
-#history-list::-webkit-scrollbar { width: 5px; } #history-list::-webkit-scrollbar-track { background: transparent; } #history-list::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 5px; }
-.history-item { display: grid; grid-template-columns: 60px 30px 1fr 60px; align-items: center; gap: 5px; padding: 8px; border-radius: 5px; margin-bottom: 8px; background: rgba(0,0,0,0.2); font-size: 0.9em; }
-.history-item .result { font-weight: bold; padding: 3px 8px; border-radius: 5px; color: #fff; text-align: center;}
-.history-item .result.tai { background-color: var(--color-tai); } .history-item .result.xiu { background-color: var(--color-xiu); }
-.history-item .dice-details { font-size: 0.8em; opacity: 0.7; }
-.history-item .total { font-weight: bold; }
-.history-item .winnings { font-weight: bold; text-align: right; }
-.history-item .winnings.win { color: var(--color-win); }
-.history-item .winnings.loss { color: var(--color-loss); }
-#reset-button { margin-top: 15px; padding: 10px; background-color: #c0392b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
-#reset-button:hover { background-color: #e74c3c; }
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
 
-@media (max-width: 768px) { body { align-items: flex-start; } .app-container { flex-direction: column; } .history-panel { width: 100%; max-height: 250px; } .header { justify-content: center; } }
-</style>
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .flashcard {
+            text-align: center;
+            padding: 50px 20px;
+            border: 2px solid #f1f5f9;
+            border-radius: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 25px;
+            background: #fff;
+        }
+
+        .korean {
+            font-size: 55px;
+            font-weight: 800;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .meaning {
+            font-size: 26px;
+            color: #ef4444;
+            margin-top: 20px;
+            font-weight: 600;
+            visibility: hidden;
+        }
+
+        .meaning.visible { visibility: visible; }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-audio { background: #dcfce7; color: #166534; }
+        .btn-show { background: #e0e7ff; color: #3730a3; }
+        .btn-next { background: var(--primary); color: white; grid-column: span 2; }
+
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        .hint { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+    </style>
 </head>
 <body>
 
-<audio id="background-music" loop><source src="https://github.com/tony2tones/freesound-scrape/blob/master/sounds/185799.mp3?raw=true" type="audio/mpeg"></audio>
-<div class="overlay hidden" id="music-prompt-modal"><div class="modal-content"><h2>Chào mừng</h2><p style="margin-bottom: 20px;">Nhấn vào nút bên dưới để vào game và bật nhạc nền.</p><button id="enter-game-btn" class="btn-action">VÀO GAME</button></div></div>
-<div class="overlay" id="auth-overlay"><div class="auth-container"><div id="login-form"><h2>Đăng Nhập</h2><div class="form-group"><input type="text" id="login-username" placeholder="Tên đăng nhập" required></div><button id="login-button">Vào Game</button><p class="toggle-form" id="show-register">Chưa có tài khoản? Đăng ký</p></div><div id="register-form"><h2>Đăng Ký</h2><div class="form-group"><input type="text" id="register-username" placeholder="Tên đăng nhập mới" required></div><button id="register-button">Đăng Ký & Vào Game</button><p class="toggle-form" id="show-login">Đã có tài khoản? Đăng nhập</p></div></div></div>
+<div class="container">
+    <h2>Tiếng Hàn Sơ Cấp 1</h2>
 
-<div class="app-container hidden" id="app-container">
-<div class="main-game">
-<div class="game-container">
-<div class="header">
-<div class="user-info"><span id="user-display"></span><div id="money-display">💰 0</div></div>
-<div id="session-display">Phiên 1</div><div id="timer-display">--</div>
-<div class="header-buttons">
-<button class="header-btn" id="deposit-btn">Nạp Tiền</button>
-<button class="header-btn" id="withdraw-btn">Rút Tiền</button>
-<button class="header-btn" id="transaction-history-btn">Lịch sử GD</button>
-<button class="header-btn" id="music-toggle-btn">Tắt Nhạc</button>
-<button class="header-btn" id="nặn-toggle-btn">Bật Nặn</button>
-<button class="header-btn" id="logout-btn">Đăng Xuất</button>
-</div>
-</div>
-<div class="game-mat"><div class="dice-area"><div id="bowl" class="bowl"></div><div id="dice1" class="dice"></div><div id="dice2" class="dice"></div><div id="dice3" class="dice"></div></div></div>
-<div class="roadmap-container"><div id="roadmap-track" class="roadmap-track"></div></div>
-<div class="betting-controls"><button id="bet-xiu" class="bet-option">XỈU</button><input type="text" id="bet-amount" placeholder="Cược" inputmode="numeric"><button id="bet-tai" class="bet-option">TÀI</button></div>
-<div id="result-message">Chuẩn bị ván mới...</div>
-</div>
-</div>
-<div class="history-panel"><h2>LỊCH SỬ CƯỢC</h2><ul id="history-list"></ul><button id="reset-button">RESET DỮ LIỆU</button></div>
-</div>
+    <div class="selector-group">
+        <select id="lessonSelect" onchange="initSession()">
+            <option value="all">--- Tất cả 15 bài ---</option>
+        </select>
+    </div>
 
-<!-- Modals -->
-<!-- MỚI: Modal nạp tiền chỉ hiển thị thông tin -->
-<div id="deposit-modal" class="modal">
-<div class="modal-content">
-<span class="modal-close" data-modal-id="deposit-modal">×</span>
-<h2>Thông tin nạp tiền</h2>
-<div class="deposit-info">
-<div class="info-line">
-<span class="info-label">Ngân hàng:</span>
-<span class="info-value">MB Bank</span>
-</div>
-<div class="info-line">
-<span class="info-label">STK:</span>
-<span class="info-value">123456789</span>
-</div>
-<div class="info-line">
-<span class="info-label">Chủ TK:</span>
-<span class="info-value">demo</span>
-</div>
-<div class="info-line">
-<span class="info-label">Nội dung:</span>
-<span class="info-value">tnv + [số tiền]</span>
-</div>
-<div class="info-line">
-<img style="width: 50%;hight:50%;margin-left:70px" src="" alt="">
-</div>
-</div>
-</div>
-</div>
+    <div class="lesson-info" id="lessonTitle">Đang tải...</div>
 
-<div id="withdraw-modal" class="modal"><div class="modal-content"><span class="modal-close" data-modal-id="withdraw-modal">×</span><h2>Rút tiền</h2><div class="form-group"><input type="text" id="withdraw-amount" placeholder="Số tiền (tối thiểu 200,000)"></div><div class="form-group"><input type="text" id="withdraw-bank" placeholder="Tên Ngân hàng (VD: VCB, ACB)"></div><div class="form-group"><input type="text" id="withdraw-account-number" placeholder="Số tài khoản"></div><div class="form-group"><input type="text" id="withdraw-account-name" placeholder="Tên chủ tài khoản"></div><div class="modal-buttons"><button id="confirm-withdraw-btn" class="btn-confirm">Xác nhận</button><button class="btn-cancel" data-modal-id="withdraw-modal">Hủy</button></div></div></div>
-<div id="transaction-history-modal" class="modal"><div class="modal-content"><span class="modal-close" data-modal-id="transaction-history-modal">×</span><h2>Lịch sử Giao dịch</h2><ul id="transaction-history-list"></ul></div></div>
+    <div class="stats">
+        <span>Tiến độ</span>
+        <span><span id="currentCount">0</span> / <span id="totalCount">0</span> từ</span>
+    </div>
+    <div class="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
+
+    <div class="flashcard">
+        <h1 class="korean" id="korWord">...</h1>
+        <div class="meaning" id="vieWord">...</div>
+    </div>
+
+    <div class="btn-grid">
+        <button class="btn-audio" onclick="playAudio()">🔊 Nghe</button>
+        <button class="btn-show" onclick="showMeaning()">👁 Dịch nghĩa</button>
+        <button class="btn-next" onclick="nextWord()">Tiếp theo ➔</button>
+    </div>
+
+    <p class="hint">Phím tắt: <b>Space</b>: Hiện nghĩa | <b>Mũi tên phải</b>: Tiếp | <b>V</b>: Nghe</p>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+    const titles = {
+        1: "Giới thiệu", 2: "Trường học", 3: "Sinh hoạt hằng ngày", 4: "Ngày tháng & Thứ", 
+        5: "Công việc hằng ngày", 6: "Cuối tuần", 7: "Mua sắm", 8: "Thức ăn", 
+        9: "Nhà cửa", 10: "Gia đình", 11: "Thời tiết", 12: "Điện thoại", 
+        13: "Giao thông", 14: "Sở thích", 15: "Du lịch"
+    };
 
-// --- DOM Elements ---
-const moneyDisplay = document.getElementById('money-display'), sessionDisplay = document.getElementById('session-display'), timerDisplay = document.getElementById('timer-display'), betXiuButton = document.getElementById('bet-xiu'), betTaiButton = document.getElementById('bet-tai'), betAmountInput = document.getElementById('bet-amount'), resultMessage = document.getElementById('result-message'), bowl = document.getElementById('bowl'), allDice = [document.getElementById('dice1'), document.getElementById('dice2'), document.getElementById('dice3')], historyList = document.getElementById('history-list'), roadmapTrack = document.getElementById('roadmap-track'), resetButton = document.getElementById('reset-button'), appContainer = document.getElementById('app-container'), authOverlay = document.getElementById('auth-overlay'), loginForm = document.getElementById('login-form'), registerForm = document.getElementById('register-form'), loginButton = document.getElementById('login-button'), registerButton = document.getElementById('register-button'), loginUsernameInput = document.getElementById('login-username'), registerUsernameInput = document.getElementById('register-username'), userDisplay = document.getElementById('user-display'), logoutBtn = document.getElementById('logout-btn'), showRegisterBtn = document.getElementById('show-register'), showLoginBtn = document.getElementById('show-login'), backgroundMusic = document.getElementById('background-music'), musicToggleBtn = document.getElementById('music-toggle-btn'), musicPromptModal = document.getElementById('music-prompt-modal'), enterGameBtn = document.getElementById('enter-game-btn'), depositBtn = document.getElementById('deposit-btn'), withdrawBtn = document.getElementById('withdraw-btn'), transactionHistoryBtn = document.getElementById('transaction-history-btn'), confirmWithdrawBtn = document.getElementById('confirm-withdraw-btn'), withdrawAmountInput = document.getElementById('withdraw-amount'), transactionHistoryList = document.getElementById('transaction-history-list');
-const withdrawBankInput = document.getElementById('withdraw-bank'), withdrawAccountNumberInput = document.getElementById('withdraw-account-number'), withdrawAccountNameInput = document.getElementById('withdraw-account-name');
-const nặnToggleBtn = document.getElementById('nặn-toggle-btn');
+    const vocab = [
+        // BÀI 1
+        {l:1, kor:"한국", vie:"Hàn Quốc"}, {l:1, kor:"베트남", vie:"Việt Nam"}, {l:1, kor:"미국", vie:"Mỹ"}, {l:1, kor:"일본", vie:"Nhật Bản"}, {l:1, kor:"중국", vie:"Trung Quốc"}, {l:1, kor:"태국", vie:"Thái Lan"}, {l:1, kor:"호주", vie:"Úc"}, {l:1, kor:"몽골", vie:"Mông Cổ"}, {l:1, kor:"인도네시아", vie:"Indonesia"}, {l:1, kor:"영국", vie:"Anh"}, {l:1, kor:"독일", vie:"Đức"}, {l:1, kor:"프랑스", vie:"Pháp"}, {l:1, kor:"러시아", vie:"Nga"}, {l:1, kor:"사람", vie:"Người"}, {l:1, kor:"학생", vie:"Học sinh"}, {l:1, kor:"선생님", vie:"Giáo viên"}, {l:1, kor:"회사원", vie:"Nhân viên công ty"}, {l:1, kor:"의사", vie:"Bác sĩ"}, {l:1, kor:"요리사", vie:"Đầu bếp"}, {l:1, kor:"가이드", vie:"Hướng dẫn viên"}, {l:1, kor:"은행원", vie:"Nhân viên ngân hàng"}, {l:1, kor:"주부", vie:"Nội trợ"}, {l:1, kor:"약사", vie:"Dược sĩ"}, {l:1, kor:"운전기사", vie:"Tài xế"}, {l:1, kor:"경찰관", vie:"Cảnh sát"}, {l:1, kor:"공무원", vie:"Công chức"}, {l:1, kor:"이름", vie:"Tên"}, {l:1, kor:"직업", vie:"Nghề nghiệp"}, {l:1, kor:"국적", vie:"Quốc tịch"}, {l:1, kor:"안녕하십니까", vie:"Chào hỏi (kính cẩn)"},
+        
+        // BÀI 2
+        {l:2, kor:"학교", vie:"Trường học"}, {l:2, kor:"교실", vie:"Lớp học"}, {l:2, kor:"도서관", vie:"Thư viện"}, {l:2, kor:"식당", vie:"Nhà ăn"}, {l:2, kor:"화장실", vie:"Nhà vệ sinh"}, {l:2, kor:"사무실", vie:"Văn phòng"}, {l:2, kor:"체육관", vie:"Phòng thể dục"}, {l:2, kor:"강당", vie:"Hội trường"}, {l:2, kor:"서점", vie: "Hiệu sách"}, {l:2, kor:"책상", vie:"Cái bàn"}, {l:2, kor:"의자", vie:"Cái ghế"}, {l:2, kor:"칠판", vie:"Cái bảng"}, {l:2, kor:"문", vie:"Cửa"}, {l:2, kor:"창문", vie:"Cửa sổ"}, {l:2, kor:"시계", vie:"Đồng hồ"}, {l:2, kor:"가방", vie:"Cái cặp"}, {l:2, kor:"컴퓨터", vie:"Máy tính"}, {l:2, kor:"책", vie:"Sách"}, {l:2, kor:"공책", vie:"Vở"}, {l:2, kor:"사전", vie:"Từ điển"}, {l:2, kor:"필통", vie:"Hộp bút"}, {l:2, kor:"지우개", vie:"Cục tẩy"}, {l:2, kor:"지도", vie:"Bản đồ"}, {l:2, kor:"펜", vie:"Bút mực"}, {l:2, kor:"여기", vie:"Đây"}, {l:2, kor:"거기", vie:"Đó"}, {l:2, kor:"저기", vie:"Kia"}, {l:2, kor:"이것", vie:"Cái này"}, {l:2, kor:"그것", vie:"Cái đó"}, {l:2, kor:"저것", vie:"Cái kia"},
+        
+        // BÀI 3
+        {l:3, kor:"가다", vie:"Đi"}, {l:3, kor:"오다", vie:"Đến"}, {l:3, kor:"자다", vie:"Ngủ"}, {l:3, kor:"먹다", vie:"Ăn"}, {l:3, kor:"마시다", vie:"Uống"}, {l:3, kor:"말하다", vie:"Nói"}, {l:3, kor:"읽다", vie:"Đọc"}, {l:3, kor:"듣다", vie:"Nghe"}, {l:3, kor:"보다", vie:"Xem"}, {l:3, kor:"일하다", vie:"Làm việc"}, {l:3, kor:"공부하다", vie:"Học"}, {l:3, kor:"운동하다", vie:"Tập thể dục"}, {l:3, kor:"쉬다", vie:"Nghỉ ngơi"}, {l:3, kor:"만나다", vie:"Gặp gỡ"}, {l:3, kor:"쇼핑하다", vie:"Mua sắm"}, {l:3, kor:"노래하다", vie:"Hát"}, {l:3, kor:"영화", vie:"Phim"}, {l:3, kor:"커피", vie:"Cà phê"}, {l:3, kor:"빵", vie:"Bánh mì"}, {l:3, kor:"음악", vie:"Âm nhạc"}, {l:3, kor:"신문", vie:"Báo"}, {l:3, kor:"친구", vie:"Bạn bè"}, {l:3, kor:"텔레비전", vie:"Tivi"}, {l:3, kor:"무엇", vie:"Cái gì"}, {l:3, kor:"어디", vie:"Ở đâu"}, {l:3, kor:"아주", vie:"Rất"},
+        
+        // BÀI 4
+        {l:4, kor:"월요일", vie:"Thứ 2"}, {l:4, kor:"화요일", vie:"Thứ 3"}, {l:4, kor:"수요일", vie:"Thứ 4"}, {l:4, kor:"목요일", vie:"Thứ 5"}, {l:4, kor:"금요일", vie:"Thứ 6"}, {l:4, kor:"토요일", vie:"Thứ 7"}, {l:4, kor:"일요일", vie:"Chủ nhật"}, {l:4, kor:"오늘", vie:"Hôm nay"}, {l:4, kor:"어제", vie:"Hôm qua"}, {l:4, kor:"내일", vie:"Ngày mai"}, {l:4, kor:"모레", vie:"Ngày kia"}, {l:4, kor:"지난주", vie:"Tuần trước"}, {l:4, kor:"이번주", vie:"Tuần này"}, {l:4, kor:"다음주", vie:"Tuần sau"}, {l:4, kor:"평일", vie:"Ngày thường"}, {l:4, kor:"주말", vie:"Cuối tuần"}, {l:4, kor:"생일", vie:"Sinh nhật"}, {l:4, kor:"시험", vie:"Kỳ thi"}, {l:4, kor:"휴가", vie:"Kỳ nghỉ"}, {l:4, kor:"언제", vie:"Khi nào"}, {l:4, kor:"월", vie:"Tháng"}, {l:4, kor:"일", vie:"Ngày"},
+        
+        // BÀI 5
+        {l:5, kor:"아침", vie:"Buổi sáng/Bữa sáng"}, {l:5, kor:"점심", vie:"Buổi trưa/Bữa trưa"}, {l:5, kor:"저녁", vie:"Buổi tối/Bữa tối"}, {l:5, kor:"오전", vie:"Sáng (AM)"}, {l:5, kor:"오후", vie:"Chiều (PM)"}, {l:5, kor:"시", vie:"Giờ"}, {l:5, kor:"분", vie:"Phút"}, {l:5, kor:"반", vie:"Rưỡi"}, {l:5, kor:"일어나다", vie:"Thức dậy"}, {l:5, kor:"씻다", vie:"Rửa (mặt/tay)"}, {l:5, kor:"요리하다", vie:"Nấu ăn"}, {l:5, kor:"공원", vie:"Công viên"}, {l:5, kor:"백화점", vie:"TT Thương mại"}, {l:5, kor:"카페", vie:"Quán Cafe"}, {l:5, kor:"시장", vie:"Chợ"}, {l:5, kor:"집", vie:"Nhà"}, {l:5, kor:"청소하다", vie:"Dọn dẹp"}, {l:5, kor:"회사", vie:"Công ty"}, {l:5, kor:"수영하다", vie:"Bơi lội"},
+        
+        // BÀI 6
+        {l:6, kor:"산책하다", vie:"Đi dạo"}, {l:6, kor:"등산하다", vie:"Leo núi"}, {l:6, kor:"여행하다", vie:"Du lịch"}, {l:6, kor:"영화를 보다", vie:"Xem phim"}, {l:6, kor:"음악을 듣다", vie:"Nghe nhạc"}, {l:6, kor:"외식하다", vie:"Ăn ngoài"}, {l:6, kor:"보통", vie:"Thông thường"}, {l:6, kor:"자주", vie:"Thường xuyên"}, {l:6, kor:"가끔", vie:"Thỉnh thoảng"}, {l:6, kor:"함께", vie:"Cùng nhau"}, {l:6, kor:"혼자", vie:"Một mình"}, {l:6, kor:"항상", vie:"Luôn luôn"}, {l:6, kor:"재미있다", vie:"Thú vị"}, {l:6, kor:"별로", vie:"Không...lắm"}, {l:6, kor:"전혀", vie:"Hoàn toàn không"},
+        
+        // BÀI 7
+        {l:7, kor:"사과", vie:"Táo"}, {l:7, kor:"오렌지", vie:"Cam"}, {l:7, kor:"우유", vie:"Sữa"}, {l:7, kor:"물", vie:"Nước"}, {l:7, kor:"주스", vie:"Nước ép"}, {l:7, kor:"콜라", vie:"Coke"}, {l:7, kor:"옷", vie:"Quần áo"}, {l:7, kor:"모자", vie:"Mũ"}, {l:7, kor:"구두", vie:"Giày da"}, {l:7, kor:"운동화", vie:"Giày thể thao"}, {l:7, kor:"우산", vie:"Dù"}, {l:7, kor:"안경", vie:"Kính"}, {l:7, kor:"비싸다", vie:"Đắt"}, {l:7, kor:"싸다", vie:"Rẻ"}, {l:7, kor:"많다", vie:"Nhiều"}, {l:7, kor:"적다", vie:"Ít"}, {l:7, kor:"크다", vie:"To/Lớn"}, {l:7, kor:"작다", vie:"Nhỏ"}, {l:7, kor:"돈", vie:"Tiền"}, {l:7, kor:"원", vie:"Đồng Won"}, {l:7, kor:"얼마", vie:"Bao nhiêu"},
+        
+        // BÀI 8
+        {l:8, kor:"비빔밥", vie:"Cơm trộn"}, {l:8, kor:"불고기", vie:"Thịt bò nướng"}, {l:8, kor:"김밥", vie:"Cơm cuộn"}, {l:8, kor:"냉면", vie:"Mì lạnh"}, {l:8, kor:"라면", vie:"Mì gói"}, {l:8, kor:"김치찌개", vie:"Canh Kim chi"}, {l:8, kor:"맛있다", vie:"Ngon"}, {l:8, kor:"맛없다", vie:"Dở"}, {l:8, kor:"맵다", vie:"Cay"}, {l:8, kor:"짜다", vie:"Mặn"}, {l:8, kor:"달다", vie:"Ngọt"}, {l:8, kor:"시다", vie:"Chua"}, {l:8, kor:"쓰다", vie:"Đắng/Viết/Dùng"}, {l:8, kor:"싱겁다", vie:"Nhạt"}, {l:8, kor:"시키다", vie:"Gọi món"}, {l:8, kor:"배가 고프다", vie:"Đói bụng"},
+        
+        // BÀI 9
+        {l:9, kor:"방", vie:"Phòng"}, {l:9, kor:"거실", vie:"Phòng khách"}, {l:9, kor:"부엌", vie:"Bếp"}, {l:9, kor:"침대", vie:"Giường"}, {l:9, kor:"냉장고", vie:"Tủ lạnh"}, {l:9, kor:"세탁기", vie:"Máy giặt"}, {l:9, kor:"텔레비전", vie:"Tivi"}, {l:9, kor:"위", vie:"Trên"}, {l:9, kor:"아래", vie:"Dưới"}, {l:9, kor:"앞", vie:"Trước"}, {l:9, kor:"뒤", vie:"Sau"}, {l:9, kor:"옆", vie:"Bên cạnh"}, {l:9, kor:"안", vie:"Trong"}, {l:9, kor:"밖", vie:"Ngoài"}, {l:9, kor:"오른쪽", vie:"Bên phải"}, {l:9, kor:"왼쪽", vie:"Bên trái"}, {l:9, kor:"사이", vie:"Giữa"},
+        
+        // BÀI 10
+        {l:10, kor:"가족", vie:"Gia đình"}, {l:10, kor:"아버지", vie:"Bố"}, {l:10, kor:"어머니", vie:"Mẹ"}, {l:10, kor:"할아버지", vie:"Ông"}, {l:10, kor:"할머니", vie:"Bà"}, {l:10, kor:"형", vie:"Anh (trai gọi)"}, {l:10, kor:"누나", vie:"Chị (trai gọi)"}, {l:10, kor:"오빠", vie:"Anh (gái gọi)"}, {l:10, kor:"언니", vie:"Chị (gái gọi)"}, {l:10, kor:"동생", vie:"Em"}, {l:10, kor:"남동생", vie:"Em trai"}, {l:10, kor:"여동생", vie:"Em gái"}, {l:10, kor:"딸", vie:"Con gái"}, {l:10, kor:"아들", vie:"Con trai"}, {l:10, kor:"친절하다", vie:"Thân thiện"}, {l:10, kor:"똑똑하다", vie:"Thông minh"}, {l:10, kor:"키가 크다", vie:"Cao"},
+        
+        // BÀI 11
+        {l:11, kor:"날씨", vie:"Thời tiết"}, {l:11, kor:"비", vie:"Mưa"}, {l:11, kor:"눈", vie:"Tuyết"}, {l:11, kor:"바람", vie:"Gió"}, {l:11, kor:"구름", vie:"Mây"}, {l:11, kor:"덥다", vie:"Nóng"}, {l:11, kor:"춥다", vie:"Lạnh"}, {l:11, kor:"따뜻하다", vie:"Ấm"}, {l:11, kor:"시원하다", vie:"Mát"}, {l:11, kor:"맑다", vie:"Nắng/Trong lành"}, {l:11, kor:"흐리다", vie:"U ám"}, {l:11, kor:"봄", vie:"Mùa Xuân"}, {l:11, kor:"여름", vie:"Mùa Hè"}, {l:11, kor:"가을", vie:"Mùa Thu"}, {l:11, kor:"겨울", vie:"Mùa Đông"},
+        
+        // BÀI 12
+        {l:12, kor:"전화", vie:"Điện thoại"}, {l:12, kor:"휴대폰", vie:"Di động"}, {l:12, kor:"전화번호", vie:"Số ĐT"}, {l:12, kor:"문자", vie:"Tin nhắn"}, {l:12, kor:"여보세요", vie:"Alo"}, {l:12, kor:"잠깐만요", vie:"Chờ chút"}, {l:12, kor:"바꾸다", vie:"Chuyển máy/Đổi"}, {l:12, kor:"통화 중", vie:"Đang bận máy"}, {l:12, kor:"우체국", vie:"Bưu điện"}, {l:12, kor:"소포", vie:"Bưu phẩm"}, {l:12, kor:"편지", vie:"Thư"}, {l:12, kor:"보내다", vie:"Gửi"},
+        
+        // BÀI 13
+        {l:13, kor:"버스", vie:"Xe buýt"}, {l:13, kor:"지하철", vie:"Tàu điện ngầm"}, {l:13, kor:"택시", vie:"Taxi"}, {l:13, kor:"자전거", vie:"Xe đạp"}, {l:13, kor:"비행기", vie:"Máy bay"}, {l:13, kor:"배", vie:"Tàu thủy/Bụng/Lê"}, {l:13, kor:"기차", vie:"Tàu hỏa"}, {l:13, kor:"타다", vie:"Đi/Lên (xe)"}, {l:13, kor:"내리다", vie:"Xuống (xe)"}, {l:13, kor:"갈아타다", vie:"Đổi xe"}, {l:13, kor:"가깝다", vie:"Gần"}, {l:13, kor:"멀다", vie:"Xa"}, {l:13, kor:"시간이 걸리다", vie:"Mất thời gian"},
+        
+        // BÀI 14
+        {l:14, kor:"취미", vie:"Sở thích"}, {l:14, kor:"축구하다", vie:"Đá bóng"}, {l:14, kor:"테니스를 치다", vie:"Chơi Tennis"}, {l:14, kor:"피아노를 치다", vie:"Chơi Piano"}, {l:14, kor:"사진을 찍다", vie:"Chụp ảnh"}, {l:14, kor:"그림을 그리다", vie:"Vẽ tranh"}, {l:14, kor:"기타를 치다", vie:"Chơi Guitar"}, {l:14, kor:"잘하다", vie:"Giỏi"}, {l:14, kor:"못하다", vie:"Kém"}, {l:14, kor:"좋아하다", vie:"Thích"}, {l:14, kor:"싫어하다", vie:"Ghét"},
+        
+        // BÀI 15
+        {l:15, kor:"바다", vie:"Biển"}, {l:15, kor:"산", vie:"Núi"}, {l:15, kor:"섬", vie:"Đảo"}, {l:15, kor:"강", vie:"Sông"}, {l:15, kor:"박물관", vie:"Bảo tàng"}, {l:15, kor:"유적지", vie:"Di tích lịch sử"}, {l:15, kor:"여행지", vie:"Địa điểm du lịch"}, {l:15, kor:"준비하다", vie:"Chuẩn bị"}, {l:15, kor:"예약하다", vie:"Đặt trước"}, {l:15, kor:"방학", vie:"Kỳ nghỉ (học sinh)"}, {l:15, kor:"기념품을 사다", vie:"Mua quà lưu niệm"}
+    ];
 
-// --- State ---
-let money, history, transactions, sessionRoundCount, currentBet = null, isShaking = false, countdown, timerInterval, currentUser;
-let isNặnMode = false, roundResultData = null, isDragging = false, dragStartX, dragStartY, bowlInitialX, bowlInitialY;
-const STARTING_MONEY = 100000, ROUND_DURATION = 30, LOCK_BET_TIME = 5, NEW_ROUND_DELAY = 5000, MIN_WITHDRAW = 200000;
-const SESSION_LENGTH = 5; // MỚI: Giới hạn cầu là 5
-const formatVNCurrency = (num) => num.toLocaleString('vi-VN');
+    let currentWords = [];
+    let currentIndex = 0;
 
-// --- Auth & Music Flow ---
-function showLoginForm() { loginForm.style.display = 'block'; registerForm.style.display = 'none'; }
-function showRegisterForm() { loginForm.style.display = 'none'; registerForm.style.display = 'block'; }
-function handleLogin() { const username = loginUsernameInput.value.trim(); if (!username) { alert('Vui lòng nhập tên đăng nhập.'); return; } if (localStorage.getItem(`taixiu_user_${username}`)) { currentUser = username; localStorage.setItem('taixiu_currentUser', currentUser); authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); } else { alert('Tên đăng nhập không tồn tại.'); } }
-function handleRegister() { const username = registerUsernameInput.value.trim(); if (!username) { alert('Vui lòng nhập tên đăng nhập.'); return; } if (localStorage.getItem(`taixiu_user_${username}`)) { alert('Tên đăng nhập đã tồn tại.'); return; } const newUserData = { money: STARTING_MONEY, history: [], transactions: [], sessionRoundCount: 0, isNặnMode: false }; localStorage.setItem(`taixiu_user_${username}`, JSON.stringify(newUserData)); currentUser = username; localStorage.setItem('taixiu_currentUser', currentUser); authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); }
-function handleLogout() { if (confirm('Bạn có chắc muốn đăng xuất?')) { localStorage.removeItem('taixiu_currentUser'); location.reload(); } }
-function checkLoggedInUser() { const loggedInUser = localStorage.getItem('taixiu_currentUser'); if (loggedInUser && localStorage.getItem(`taixiu_user_${loggedInUser}`)) { currentUser = loggedInUser; authOverlay.classList.add('hidden'); musicPromptModal.classList.remove('hidden'); } else { authOverlay.classList.remove('hidden'); musicPromptModal.classList.add('hidden'); } }
-function launchGame() { musicPromptModal.classList.add('hidden'); appContainer.classList.remove('hidden'); initializeGame(); }
-function toggleMusic(forcePlay = false) { if (forcePlay) { backgroundMusic.play().catch(e => console.error("Lỗi phát nhạc:", e)); musicToggleBtn.textContent = 'Tắt Nhạc'; return; } if (backgroundMusic.paused) { backgroundMusic.play(); musicToggleBtn.textContent = 'Tắt Nhạc'; } else { backgroundMusic.pause(); musicToggleBtn.textContent = 'Bật Nhạc'; } }
+    function initSelect() {
+        const select = document.getElementById('lessonSelect');
+        for (let i = 1; i <= 15; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = `Bài ${i}: ${titles[i]}`;
+            select.appendChild(opt);
+        }
+        initSession();
+    }
 
-// --- Giao dịch & Nặn Bát ---
-function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
-function addTransaction(transactionObject) { transactions.unshift(transactionObject); if (transactions.length > 100) transactions.pop(); }
-function handleWithdraw() {
-const amount = parseFormattedNumber(withdrawAmountInput.value);
-if (isNaN(amount) || amount < MIN_WITHDRAW) { alert(`Số tiền rút tối thiểu là ${formatVNCurrency(MIN_WITHDRAW)} VNĐ.`); return; }
-if (amount > money) { alert('Số tiền rút không được lớn hơn số dư!'); return; }
-const bank = withdrawBankInput.value.trim(), accountNumber = withdrawAccountNumberInput.value.trim(), accountName = withdrawAccountNameInput.value.trim();
-if (!bank || !accountNumber || !accountName) { alert('Vui lòng điền đầy đủ thông tin ngân hàng.'); return; }
-money -= amount;
-addTransaction({ type: 'withdraw', amount, timestamp: Date.now(), details: { bank, accountNumber, accountName } });
-saveGameData(); updateAllUI(); closeModal('withdraw-modal');
-[withdrawAmountInput, withdrawBankInput, withdrawAccountNumberInput, withdrawAccountNameInput].forEach(input => input.value = '');
-alert(`Yêu cầu rút ${formatVNCurrency(amount)} đã được gửi đi!`);
-}
-function toggleNặnMode() { isNặnMode = !isNặnMode; nặnToggleBtn.textContent = isNặnMode ? 'Tắt Nặn' : 'Bật Nặn'; nặnToggleBtn.classList.toggle('active', isNặnMode); saveGameData(); }
+    function initSession() {
+        const lesson = document.getElementById('lessonSelect').value;
+        if (lesson === 'all') {
+            currentWords = [...vocab].sort(() => Math.random() - 0.5);
+            document.getElementById('lessonTitle').innerText = "Tất cả bài học (Ngẫu nhiên)";
+        } else {
+            currentWords = vocab.filter(w => w.l == lesson).sort(() => Math.random() - 0.5);
+            document.getElementById('lessonTitle').innerText = `Bài ${lesson}: ${titles[lesson]}`;
+        }
+        currentIndex = 0;
+        updateWord();
+    }
 
-// --- Khởi tạo & Gán sự kiện ---
-function initializeGame() { loadGameData(); updateAllUI(); startNewRound(); toggleMusic(true); }
-function setupAllEventListeners() {
-loginButton.addEventListener('click', handleLogin); registerButton.addEventListener('click', handleRegister);
-showRegisterBtn.addEventListener('click', showRegisterForm); showLoginBtn.addEventListener('click', showLoginForm);
-enterGameBtn.addEventListener('click', launchGame);
-betXiuButton.addEventListener('click', () => selectBet('xiu')); betTaiButton.addEventListener('click', () => selectBet('tai'));
-resetButton.addEventListener('click', resetGameData);
-betAmountInput.addEventListener('input', handleBetInputFormatting);
-logoutBtn.addEventListener('click', handleLogout); musicToggleBtn.addEventListener('click', () => toggleMusic());
-nặnToggleBtn.addEventListener('click', toggleNặnMode);
-depositBtn.addEventListener('click', () => openModal('deposit-modal'));
-withdrawBtn.addEventListener('click', () => openModal('withdraw-modal'));
-transactionHistoryBtn.addEventListener('click', () => { updateTransactionHistoryUI(); openModal('transaction-history-modal'); });
-confirmWithdrawBtn.addEventListener('click', handleWithdraw);
-document.querySelectorAll('.modal-close, .btn-cancel').forEach(el => { el.addEventListener('click', () => closeModal(el.dataset.modalId)); });
+    function updateWord() {
+        if (currentWords.length === 0) return;
+        const word = currentWords[currentIndex];
+        document.getElementById('korWord').innerText = word.kor;
+        document.getElementById('vieWord').innerText = word.vie;
+        document.getElementById('vieWord').classList.remove('visible');
+        
+        document.getElementById('currentCount').innerText = currentIndex + 1;
+        document.getElementById('totalCount').innerText = currentWords.length;
+        
+        const progress = ((currentIndex + 1) / currentWords.length) * 100;
+        document.getElementById('progress-fill').style.width = progress + "%";
+    }
 
-// Sự kiện kéo bát
-bowl.addEventListener('mousedown', onDragStart); bowl.addEventListener('touchstart', onDragStart, { passive: true });
-document.addEventListener('mousemove', onDragMove); document.addEventListener('touchmove', onDragMove, { passive: false });
-document.addEventListener('mouseup', onDragEnd); document.addEventListener('touchend', onDragEnd);
-}
+    function showMeaning() {
+        document.getElementById('vieWord').classList.add('visible');
+    }
 
-// --- Logic Kéo Bát (Nặn) ---
-function onDragStart(event) {
-if (!bowl.classList.contains('ready-to-nặn') || isDragging) return;
-isDragging = true;
-const clientX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
-const clientY = event.type === 'touchstart' ? event.touches[0].clientY : event.clientY;
-dragStartX = clientX; dragStartY = clientY;
-const computedStyle = window.getComputedStyle(bowl);
-const transform = new DOMMatrix(computedStyle.transform);
-bowlInitialX = transform.m41; bowlInitialY = transform.m42;
-bowl.style.transition = 'none'; // Tắt transition để kéo mượt
-}
-function onDragMove(event) {
-if (!isDragging) return;
-event.preventDefault();
-const clientX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
-const clientY = event.type === 'touchmove' ? event.touches[0].clientY : event.clientY;
-const deltaX = clientX - dragStartX;
-const deltaY = clientY - dragStartY;
-bowl.style.transform = `translate(${bowlInitialX + deltaX}px, ${bowlInitialY + deltaY}px)`;
-}
-function onDragEnd() {
-if (!isDragging) return;
-isDragging = false;
-bowl.classList.remove('ready-to-nặn');
-bowl.style.transition = 'transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; // Bật lại transition
-bowl.classList.add('revealed');
-finalizeRound(roundResultData);
-}
+    function nextWord() {
+        if (currentIndex < currentWords.length - 1) {
+            currentIndex++;
+            updateWord();
+        } else {
+            alert("Hoàn thành bài học! Chúng ta sẽ bắt đầu lại.");
+            initSession();
+        }
+    }
 
-// --- Game Loop & Logic ---
-function startNewRound() { clearTimeout(timerInterval); isShaking = false; countdown = ROUND_DURATION; resetRoundUI(); if (sessionRoundCount >= SESSION_LENGTH) { sessionRoundCount = 0; roadmapTrack.classList.add('clearing'); setTimeout(() => { roadmapTrack.innerHTML = ''; roadmapTrack.classList.remove('clearing'); }, 300); } tick(); timerInterval = setInterval(tick, 1000); }
-function tick() { updateTimerDisplay(); if (countdown <= LOCK_BET_TIME && countdown > 0) lockBetting(); if (countdown <= 0) { clearInterval(timerInterval); runShakeSequence(); } countdown--; }
-function runShakeSequence() {
-const betAmount = parseFormattedNumber(betAmountInput.value);
-if (isShaking) return;
-if (currentBet && betAmount > money) { showError("Không đủ tiền cược!"); currentBet = null; betAmountInput.value = ''; betTaiButton.classList.remove('active-bet'); betXiuButton.classList.remove('active-bet'); return; }
-isShaking = true; resetRoundVisuals();
-setTimeout(() => { let shakeCount = 0; const shakeInterval = setInterval(() => { bowl.classList.add('shaking'); setTimeout(() => bowl.classList.remove('shaking'), 400); shakeCount++; if (shakeCount >= 3) { clearInterval(shakeInterval); setTimeout(() => revealResult(betAmount), 500); } }, 600); }, 500);
-}
-function revealResult(betAmount) {
-const [d1, d2, d3] = [1, 2, 3].map(() => Math.floor(Math.random() * 6) + 1); const total = d1 + d2 + d3;
-let gameResultType = (total <= 10) ? 'xiu' : 'tai', winnings = 0;
-if (currentBet && betAmount > 0) {
-if (gameResultType !== currentBet) { winnings = -betAmount; } else { winnings = betAmount; }
-}
-roundResultData = { gameResultType, total, diceValues: [d1, d2, d3], betAmount, winnings };
-positionAndShowDice(roundResultData.diceValues);
-if (isNặnMode) {
-bowl.classList.add('ready-to-nặn');
-resultMessage.textContent = 'Mời bạn nặn bát...';
-} else {
-bowl.classList.add('revealed');
-finalizeRound(roundResultData);
-}
-}
-function finalizeRound(resultData) {
-money += resultData.winnings; sessionRoundCount++;
-updateHistory(resultData.gameResultType, resultData.total, resultData.diceValues, resultData.betAmount, resultData.winnings);
-resultMessage.textContent = `Kết quả: ${resultData.total}Đ - ${resultData.gameResultType.toUpperCase()}!`;
-saveGameData(); updateAllUI(); setTimeout(startNewRound, NEW_ROUND_DELAY);
-}
+    function playAudio() {
+        const text = currentWords[currentIndex].kor;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ko-KR';
+        msg.rate = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
 
-// --- UI & Data Functions ---
-function selectBet(betType) { if (isShaking || countdown <= LOCK_BET_TIME || bowl.classList.contains('ready-to-nặn')) return; currentBet = betType; betTaiButton.classList.toggle('active-bet', betType === 'tai'); betXiuButton.classList.toggle('active-bet', betType === 'xiu'); }
-function lockBetting() { betAmountInput.disabled = true; betTaiButton.disabled = true; betXiuButton.disabled = true; if (countdown === LOCK_BET_TIME) resultMessage.textContent = "Hết giờ cược!"; }
-function resetRoundUI() { bowl.className = 'bowl'; bowl.style.transform = 'translate(-50%, -50%)'; allDice.forEach(d => { d.className = 'dice'; }); betTaiButton.classList.remove('active-bet'); betXiuButton.classList.remove('active-bet'); betAmountInput.value = ''; currentBet = null; betAmountInput.disabled = false; betTaiButton.disabled = false; betXiuButton.disabled = false; resultMessage.textContent = 'Mời đặt cược...'; updateSessionDisplay(); roundResultData = null; }
-function resetRoundVisuals() { bowl.className = 'bowl'; bowl.style.transform = 'translate(-50%, -50%)'; allDice.forEach(d => { d.className = 'dice'; }); resultMessage.textContent = 'Đang xóc...'; }
-function updateTimerDisplay() { timerDisplay.textContent = countdown >= 0 ? countdown : 0; timerDisplay.classList.toggle('locked', countdown <= LOCK_BET_TIME); }
-function positionAndShowDice([v1, v2, v3]) {
-const values = [v1, v2, v3];
-const endPositions = [{ top: '50%', left: '25%' }, { top: '25%', left: '50%' }, { top: '75%', left: '50%' }];
-allDice.forEach((dice, i) => {
-dice.className = 'dice visible'; updateDiceUI(dice, values[i]);
-dice.style.top = endPositions[i].top; dice.style.left = endPositions[i].left;
-dice.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
-});
-}
-function updateDiceUI(diceEl, value) { diceEl.classList.add(`face-${value}`); diceEl.innerHTML = Array(value).fill('<div class="dot"></div>').join(''); }
-function handleBetInputFormatting(e) { const input = e.target; let rawValue = input.value.replace(/[^0-9]/g, ''); if (parseFormattedNumber(rawValue) > money) { rawValue = String(money); } input.value = rawValue.length > 0 ? formatVNCurrency(parseFormattedNumber(rawValue)) : ''; }
-function parseFormattedNumber(formattedString) { return parseInt(String(formattedString).replace(/[^0-9]/g, ''), 10) || 0; }
-function loadGameData() {
-const userData = JSON.parse(localStorage.getItem(`taixiu_user_${currentUser}`));
-money = userData.money || 0; history = userData.history || []; transactions = userData.transactions || [];
-sessionRoundCount = userData.sessionRoundCount || 0; isNặnMode = userData.isNặnMode || false;
-}
-function saveGameData() { const userData = { money, history, transactions, sessionRoundCount, isNặnMode }; localStorage.setItem(`taixiu_user_${currentUser}`, JSON.stringify(userData)); }
-function resetGameData() { if (confirm('Bạn có chắc muốn reset toàn bộ dữ liệu?')) { const newUserData = { money: STARTING_MONEY, history: [], transactions: [], sessionRoundCount: 0, isNặnMode: false }; localStorage.setItem(`taixiu_user_${currentUser}`, JSON.stringify(newUserData)); location.reload(); } }
-function updateHistory(result, total, diceValues, betAmount, winnings) { history.unshift({ result, total, diceValues, betAmount, winnings, id: Date.now() }); if (history.length > 50) history.pop(); }
-function updateAllUI() { userDisplay.textContent = `Chào, ${currentUser}!`; updateMoneyDisplay(); updateHistoryUI(); renderFullRoadmap(); updateSessionDisplay(); nặnToggleBtn.textContent = isNặnMode ? 'Tắt Nặn' : 'Bật Nặn'; nặnToggleBtn.classList.toggle('active', isNặnMode); }
-function updateSessionDisplay() { sessionDisplay.textContent = `Phiên ${sessionRoundCount + 1 > SESSION_LENGTH ? 1 : sessionRoundCount + 1}`; }
-function updateHistoryUI() {
-historyList.innerHTML = history.length === 0 ? '<li style="text-align:center; opacity:0.5;">Chưa có lịch sử</li>'
-: history.map(entry => { const resultText = entry.result.charAt(0).toUpperCase() + entry.result.slice(1); let winningsHtml = entry.betAmount > 0 ? `<span class="winnings ${entry.winnings >= 0 ? 'win' : 'loss'}">${entry.winnings >= 0 ? '+' : ''}${formatVNCurrency(entry.winnings)}</span>` : `<span class="winnings">--</span>`; return `<li class="history-item"><span class="result ${entry.result}">${resultText}</span><span class="total">${entry.total}</span><span class="dice-details">${entry.diceValues.join('-')}</span>${winningsHtml}</li>`; }).join('');
-}
-function renderFullRoadmap() { roadmapTrack.innerHTML = ''; const roadmapHistory = history.slice(0, 20).reverse(); roadmapHistory.forEach(entry => { const letter = entry.result === 'tai' ? 'T' : 'X'; const roadmapItem = document.createElement('div'); roadmapItem.className = `roadmap-item ${entry.result}`; roadmapItem.textContent = letter; roadmapTrack.appendChild(roadmapItem); }); }
-function updateMoneyDisplay() { moneyDisplay.innerHTML = `💰 ${formatVNCurrency(money)}`; }
-function showError(message) { resultMessage.textContent = message; resultMessage.style.color = 'var(--color-loss)'; betAmountInput.classList.add('input-error'); setTimeout(() => { resultMessage.style.color = 'var(--text-light)'; betAmountInput.classList.remove('input-error'); }, 1500); }
-function updateTransactionHistoryUI() {
-transactionHistoryList.innerHTML = transactions.length === 0 ? '<li style="text-align:center; opacity:0.5;">Chưa có giao dịch</li>'
-: transactions.map(t => { let detailsHtml = ''; if (t.type === 'withdraw' && t.details) { detailsHtml = `<div class="transaction-details"><div><span class="detail-label">Ngân hàng:</span> ${t.details.bank}</div><div><span class="detail-label">STK:</span> ${t.details.accountNumber}</div><div><span class="detail-label">Người nhận:</span> ${t.details.accountName}</div></div>`; } return `<li class="transaction-item ${t.type}"><div class="main-info"><div class="info"><div class="type">${t.type === 'deposit' ? 'Nạp tiền' : 'Rút tiền'}</div><div class="time">${new Date(t.timestamp).toLocaleString('vi-VN')}</div></div><div class="amount">${t.type === 'deposit' ? '+' : '-'}${formatVNCurrency(t.amount)}</div></div>${detailsHtml}</li>`; }).join('');
-}
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') { e.preventDefault(); showMeaning(); }
+        if (e.code === 'ArrowRight') nextWord();
+        if (e.code === 'KeyV') playAudio();
+    });
 
-// --- App Entry Point ---
-function main() { setupAllEventListeners(); checkLoggedInUser(); }
-main();0
-
-});
+    window.onload = initSelect;
 </script>
+
 </body>
 </html>
-
