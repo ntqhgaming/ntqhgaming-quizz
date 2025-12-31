@@ -1,583 +1,307 @@
-
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thi Trắc Nghiệm TH27.25 by NTQH</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếng Hàn Sơ Cấp 1 by NTQH</title>
     <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
-    html {
-        font-family: "Poppins", sans-serif;
-    }
-
-    body {
-        background-color: #555454;
-        padding: 20px;
-        margin: 0;
-    }
-
-    h1 {
-        color: red;
-        text-align: center;
-    }
-
-    .quiz-container {
-        position: relative;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        padding: 20px;
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin: 0 auto;
-        max-width: 600px;
-    }
-
-    .question {
-        margin-bottom: 20px;
-    }
-
-    .answer {
-        display: block;
-        margin: 10px 0;
-        padding: 12px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        border-radius: 5px;
-        user-select: none;
-    }
-
-    .correct {
-        background-color: #4caf50 !important;
-        color: white !important;
-    }
-
-    .incorrect {
-        background-color: #f44336 !important;
-        color: white !important;
-    }
-
-    #result {
-        margin-top: 20px;
-        font-size: 1.2em;
-    }
-
-    .navigation {
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    button {
-        padding: 10px 15px;
-        margin: 0 5px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button.rounded {
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-
-    button.hidden {
-        display: none;
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    #title {
-        font-size: 18px;
-        font-weight: 500;
-    }
-
-    #thumb_question {
-        width: 100%;
-        height: auto;
-        max-height: 350px;
-        object-fit: contain;
-    }
-
-    #head {
-        display: flex;
-        align-items: center;
-    }
-
-    #head > #title {
-        margin-right: 15px;
-    }
-
-    #head > span {
-        flex: 1;
-        margin-left: auto;
-    }
-
-    #index-toggle-icon {
-        font-size: 20px;
-        color: #555;
-        cursor: pointer;
-        transition: color 0.3s;
-        margin-left: 10px;
-    }
-
-    #index-toggle-icon:hover {
-        color: #007bff;
-    }
-
-    #question-index-container {
-        display: none;
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        width: 300px;
-        max-height: 400px;
-        overflow-y: auto;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-        padding: 10px;
-    }
-
-    #question-index-container.show {
-        display: block;
-    }
-
-    .index-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-        gap: 8px;
-    }
-
-    .index-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border: 1px solid #ccc;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        font-weight: 500;
-        background-color: #f0f0f0;
-    }
-
-    .index-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .index-item.current {
-        border-color: #007bff;
-        background-color: #007bff;
-        color: white;
-        font-weight: 700;
-    }
-    .index-item.answered.correct {
-        background-color: #4caf50;
-        color: white;
-        border-color: #4caf50;
-    }
-    .index-item.answered.incorrect {
-        background-color: #f44336;
-        color: white;
-        border-color: #f44336;
-    }
-
-    /* === CSS DÀNH RIÊNG CHO MỤC LỤC TRÊN DI ĐỘNG (màn hình rộng tối đa 640px) === */
-    @media (max-width: 640px) {
-        /* Chỉ can thiệp vào mục lục câu hỏi, không thay đổi bất kỳ thành phần nào khác */
-        #question-index-container {
-            width: 90vw; /* Chiếm 90% chiều rộng màn hình */
-            max-width: 320px; /* Giới hạn chiều rộng tối đa, tránh quá to */
-            top: 70px; /* Điều chỉnh lại khoảng cách từ đỉnh */
-            
-            /* Căn giữa popup theo chiều ngang một cách chính xác */
-            left: 50%; 
-            right: auto;
-            transform: translateX(-50%); 
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
         }
-    }
-</style>
-  </head>
 
-  <body>
-    <h1>Phần Mềm Thi Trắc Nghiệm</h1>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
 
-    <div class="quiz-container">
-      <div id="questionsContainer"></div>
-      <!-- Container mục lục sẽ được chèn vào đây bởi JS -->
+        .container {
+            background: var(--card);
+            width: 95%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
 
-      <div class="navigation">
-        <button id="shuffleButton" class="rounded">
-          <i style="pointer-events: none" class="fa-solid fa-shuffle"></i>
-        </button>
-        <button id="backButton">Quay lại</button>
-        <button id="nextButton">Tiếp theo</button>
-        <button id="againButton">Làm lại câu sai</button>
-      </div>
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
 
-      <div id="result"></div>
+        .selector-group { margin-bottom: 20px; }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .lesson-info {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .flashcard {
+            text-align: center;
+            padding: 50px 20px;
+            border: 2px solid #f1f5f9;
+            border-radius: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 25px;
+            background: #fff;
+        }
+
+        .korean {
+            font-size: 55px;
+            font-weight: 800;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .meaning {
+            font-size: 26px;
+            color: #ef4444;
+            margin-top: 20px;
+            font-weight: 600;
+            visibility: hidden;
+        }
+
+        .meaning.visible { visibility: visible; }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-audio { background: #dcfce7; color: #166534; }
+        .btn-show { background: #e0e7ff; color: #3730a3; }
+        .btn-next { background: var(--primary); color: white; grid-column: span 2; }
+
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        .hint { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Tiếng Hàn Sơ Cấp 1</h2>
+
+    <div class="selector-group">
+        <select id="lessonSelect" onchange="initSession()">
+            <option value="all">--- Tất cả 15 bài ---</option>
+        </select>
     </div>
 
-    <script type="module">
-      // Giả sử đây là file data.js của bạn
-      // THAY BẰNG DÒNG NÀY
-        import questions from "./data.js";
+    <div class="lesson-info" id="lessonTitle">Đang tải...</div>
 
-      let selectList = [];
-      let incorrectList = [];
-      let currentQuestionIndex = 0;
-      let questionList = questions.question_2.origin_question;
-      let isShuffle = false;
-      let makeAgainMode = false;
-      let autoPlayTimeout = null;
+    <div class="stats">
+        <span>Tiến độ</span>
+        <span><span id="currentCount">0</span> / <span id="totalCount">0</span> từ</span>
+    </div>
+    <div class="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
 
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i >= 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
+    <div class="flashcard">
+        <h1 class="korean" id="korWord">...</h1>
+        <div class="meaning" id="vieWord">...</div>
+    </div>
 
-      const quizContainer = document.querySelector(".quiz-container");
-      const questionContainer = document.getElementById("questionsContainer");
-      const shuffleBtn = document.getElementById("shuffleButton");
-      const nextBtn = document.getElementById("nextButton");
-      const backBtn = document.getElementById("backButton");
-      const againBtn = document.getElementById("againButton");
+    <div class="btn-grid">
+        <button class="btn-audio" onclick="playAudio()">🔊 Nghe</button>
+        <button class="btn-show" onclick="showMeaning()">👁 Dịch nghĩa</button>
+        <button class="btn-next" onclick="nextWord()">Tiếp theo ➔</button>
+    </div>
 
-      // === PHẦN MỚI: TẠO CÁC PHẦN TỬ CHO MỤC LỤC ===
-      const indexToggleIcon = document.createElement("i");
-      indexToggleIcon.id = "index-toggle-icon";
-      indexToggleIcon.className = "fa-solid fa-list-ul";
+    <p class="hint">Phím tắt: <b>Space</b>: Hiện nghĩa | <b>Mũi tên phải</b>: Tiếp | <b>V</b>: Nghe</p>
+</div>
 
-      const questionIndexContainer = document.createElement("div");
-      questionIndexContainer.id = "question-index-container";
-      const indexGrid = document.createElement("div");
-      indexGrid.className = "index-grid";
-      questionIndexContainer.appendChild(indexGrid);
-      quizContainer.appendChild(questionIndexContainer); // Chèn vào DOM
-      // === KẾT THÚC PHẦN MỚI ===
+<script>
+    const titles = {
+        1: "Giới thiệu", 2: "Trường học", 3: "Sinh hoạt hằng ngày", 4: "Ngày tháng & Thứ", 
+        5: "Công việc hằng ngày", 6: "Cuối tuần", 7: "Mua sắm", 8: "Thức ăn", 
+        9: "Nhà cửa", 10: "Gia đình", 11: "Thời tiết", 12: "Điện thoại", 
+        13: "Giao thông", 14: "Sở thích", 15: "Du lịch"
+    };
 
-      window.addEventListener("keydown", (e) => {
-        switch (e.keyCode) {
-          case 39: handleNextQuestion(nextBtn, makeAgainMode); break;
-          case 37: handleBackQuestion(backBtn); break;
-        }
-      });
-
-      // === PHẦN MỚI: SỰ KIỆN CHO ICON VÀ ĐÓNG MỤC LỤC ===
-      indexToggleIcon.addEventListener("click", (e) => {
-        e.stopPropagation(); // Ngăn sự kiện click lan ra document
-        questionIndexContainer.classList.toggle("show");
-      });
-
-      document.addEventListener("click", (e) => {
-        // Nếu click ra ngoài mục lục và ngoài icon, thì ẩn mục lục đi
-        if (
-          !questionIndexContainer.contains(e.target) &&
-          !indexToggleIcon.contains(e.target)
-        ) {
-          questionIndexContainer.classList.remove("show");
-        }
-      });
-      // === KẾT THÚC PHẦN MỚI ===
-
-
-      const handleShuffleArray = (e) => {
-        isShuffle = true;
-        questionContainer.innerHTML = "";
-        questionList = shuffleArray([...questions.question_2.origin_question]); // Tạo bản sao để shuffle
-        currentQuestionIndex = 0; // Reset về câu đầu
-        selectList = []; // Xóa các câu đã chọn
-        incorrectList = []; // Xóa các câu sai
-        displayQuestion(questionList[currentQuestionIndex]);
-        e.target.classList.add("hidden");
-        e.target.disabled = true;
-      };
-
-      const handleMakeIncorrect = (ques) => {
-        incorrectList = [
-          ...incorrectList,
-          ...ques.filter((sl) => !sl?.isCorrect),
-        ];
-        selectList = ques.filter(
-          (sl) => !incorrectList.some((ic) => sl?.id === ic?.id)
-        );
-        const idIncorrect = questionList.findIndex(
-          (ques) => ques?.id === incorrectList[0]?.id
-        );
-        if (incorrectList.length > 0) makeAgainMode = true;
-        if (idIncorrect !== -1) {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = idIncorrect;
-          displayQuestion(questionList[currentQuestionIndex]);
-        }
-      };
-
-      const handleNextQuestion = (target) => {
-        if (autoPlayTimeout !== null) clearTimeout(autoPlayTimeout);
-        if (currentQuestionIndex >= questionList.length - 1) {
-          displayResult();
-          return;
-        } else {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = makeAgainMode
-            ? questionList.findIndex(
-                (ques) => ques?.id === incorrectList[0]?.id
-              )
-            : ++currentQuestionIndex;
-          displayQuestion(questionList[currentQuestionIndex]);
-          target.disabled = false;
-        }
-        const answer = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === questionList[currentQuestionIndex].id
-        );
-        if (answer)
-          checkAnswer(
-            answer,
-            selectList,
-            indexSelected,
-            selectList[indexSelected]?.chooseId
-          );
-      };
-
-      const handleBackQuestion = (target) => {
-        if (autoPlayTimeout !== null) clearTimeout(autoPlayTimeout);
-        if (currentQuestionIndex <= 0) {
-          target.disabled = true;
-          return;
-        } else {
-          questionContainer.innerHTML = "";
-          currentQuestionIndex = makeAgainMode
-            ? questionList.findIndex(
-                (ques) => ques?.id === incorrectList[0]?.id
-              )
-            : --currentQuestionIndex;
-          displayQuestion(questionList[currentQuestionIndex]);
-          target.disabled = false;
-        }
-        const answer = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === questionList[currentQuestionIndex].id
-        );
-        if (answer)
-          checkAnswer(
-            answer,
-            selectList,
-            indexSelected,
-            selectList[indexSelected]?.chooseId
-          );
-      };
-
-      shuffleBtn.addEventListener("click", (e) => handleShuffleArray(e));
-      againBtn.addEventListener("click", () => handleMakeIncorrect(selectList));
-      nextBtn.addEventListener("click", (e) => handleNextQuestion(e.target));
-      backBtn.addEventListener("click", (e) => handleBackQuestion(e.target));
-
-      function checkAnswer(element, ques, index, idActiveResult) {
-        const question = ques[index] || [];
-        const correctIndex = question?.idCorrectResult;
-        if (correctIndex !== undefined && idActiveResult !== undefined) {
-          if (+idActiveResult === +correctIndex) {
-            element.forEach((elm) => {
-              if (+elm.dataset.result === +idActiveResult)
-                elm.classList.add("correct");
-            });
-          } else {
-            element.forEach((elm) => {
-              if (+elm.dataset.result === +correctIndex)
-                elm.classList.add("correct");
-              else if (
-                +elm.dataset.result !== +correctIndex &&
-                +elm.dataset.result === +idActiveResult
-              )
-                elm.classList.add("incorrect");
-            });
-          }
-        }
-      }
-
-      const head = document.createElement("section");
-      const title = document.createElement("h2");
-      const currentQuestion = document.createElement("span");
-      const thumb_question = document.createElement("img");
-
-
-      // === PHẦN MỚI: HÀM RENDER MỤC LỤC ===
-      function renderQuestionIndex() {
-        indexGrid.innerHTML = ""; // Xóa mục lục cũ
-        questionList.forEach((q, index) => {
-            const item = document.createElement("div");
-            item.className = "index-item";
-            item.textContent = index + 1;
-            item.dataset.index = index;
-
-            // Kiểm tra trạng thái câu hỏi để thêm class
-            const answeredQuestion = selectList.find(ans => ans.id === q.id);
-            if(answeredQuestion) {
-                item.classList.add("answered");
-                if(answeredQuestion.isCorrect) {
-                    item.classList.add("correct");
-                } else {
-                    item.classList.add("incorrect");
-                }
-            }
-
-            if (index === currentQuestionIndex) {
-                item.classList.add("current");
-            }
-
-            // Sự kiện click để chuyển câu hỏi
-            item.addEventListener('click', () => {
-                currentQuestionIndex = parseInt(item.dataset.index);
-                questionContainer.innerHTML = "";
-                displayQuestion(questionList[currentQuestionIndex]);
-                questionIndexContainer.classList.remove('show'); // Ẩn mục lục sau khi chọn
-            });
-
-            indexGrid.appendChild(item);
-        });
-      }
-
-
-      function displayQuestion(question) {
-        // Cập nhật mục lục mỗi khi hiển thị câu hỏi mới
-        renderQuestionIndex();
-
-        const currentId = currentQuestionIndex;
-        if (question.thumb) {
-          thumb_question.id = "thumb_question";
-          thumb_question.setAttribute("src", question.thumb);
-          questionContainer.appendChild(thumb_question);
-        }
-
-        title.id = "title";
-        title.textContent = question.title;
-        currentQuestion.textContent = `${currentId + 1} / ${questionList.length}`;
-        head.id = "head";
+    const vocab = [
+        // BÀI 1
+        {l:1, kor:"한국", vie:"Hàn Quốc"}, {l:1, kor:"베트남", vie:"Việt Nam"}, {l:1, kor:"미국", vie:"Mỹ"}, {l:1, kor:"일본", vie:"Nhật Bản"}, {l:1, kor:"중국", vie:"Trung Quốc"}, {l:1, kor:"태국", vie:"Thái Lan"}, {l:1, kor:"호주", vie:"Úc"}, {l:1, kor:"몽골", vie:"Mông Cổ"}, {l:1, kor:"인도네시아", vie:"Indonesia"}, {l:1, kor:"영국", vie:"Anh"}, {l:1, kor:"독일", vie:"Đức"}, {l:1, kor:"프랑스", vie:"Pháp"}, {l:1, kor:"러시아", vie:"Nga"}, {l:1, kor:"사람", vie:"Người"}, {l:1, kor:"학생", vie:"Học sinh"}, {l:1, kor:"선생님", vie:"Giáo viên"}, {l:1, kor:"회사원", vie:"Nhân viên công ty"}, {l:1, kor:"의사", vie:"Bác sĩ"}, {l:1, kor:"요리사", vie:"Đầu bếp"}, {l:1, kor:"가이드", vie:"Hướng dẫn viên"}, {l:1, kor:"은행원", vie:"Nhân viên ngân hàng"}, {l:1, kor:"주부", vie:"Nội trợ"}, {l:1, kor:"약사", vie:"Dược sĩ"}, {l:1, kor:"운전기사", vie:"Tài xế"}, {l:1, kor:"경찰관", vie:"Cảnh sát"}, {l:1, kor:"공무원", vie:"Công chức"}, {l:1, kor:"이름", vie:"Tên"}, {l:1, kor:"직업", vie:"Nghề nghiệp"}, {l:1, kor:"국적", vie:"Quốc tịch"}, {l:1, kor:"안녕하십니까", vie:"Chào hỏi (kính cẩn)"},
         
-        // Xóa con cũ trước khi thêm vào
-        head.innerHTML = ''; 
-        head.appendChild(title);
-        head.appendChild(currentQuestion);
-        // === CHỈNH SỬA: THÊM ICON VÀO HEAD ===
-        head.appendChild(indexToggleIcon);
-        // === KẾT THÚC CHỈNH SỬA ===
+        // BÀI 2
+        {l:2, kor:"학교", vie:"Trường học"}, {l:2, kor:"교실", vie:"Lớp học"}, {l:2, kor:"도서관", vie:"Thư viện"}, {l:2, kor:"식당", vie:"Nhà ăn"}, {l:2, kor:"화장실", vie:"Nhà vệ sinh"}, {l:2, kor:"사무실", vie:"Văn phòng"}, {l:2, kor:"체육관", vie:"Phòng thể dục"}, {l:2, kor:"강당", vie:"Hội trường"}, {l:2, kor:"서점", vie: "Hiệu sách"}, {l:2, kor:"책상", vie:"Cái bàn"}, {l:2, kor:"의자", vie:"Cái ghế"}, {l:2, kor:"칠판", vie:"Cái bảng"}, {l:2, kor:"문", vie:"Cửa"}, {l:2, kor:"창문", vie:"Cửa sổ"}, {l:2, kor:"시계", vie:"Đồng hồ"}, {l:2, kor:"가방", vie:"Cái cặp"}, {l:2, kor:"컴퓨터", vie:"Máy tính"}, {l:2, kor:"책", vie:"Sách"}, {l:2, kor:"공책", vie:"Vở"}, {l:2, kor:"사전", vie:"Từ điển"}, {l:2, kor:"필통", vie:"Hộp bút"}, {l:2, kor:"지우개", vie:"Cục tẩy"}, {l:2, kor:"지도", vie:"Bản đồ"}, {l:2, kor:"펜", vie:"Bút mực"}, {l:2, kor:"여기", vie:"Đây"}, {l:2, kor:"거기", vie:"Đó"}, {l:2, kor:"저기", vie:"Kia"}, {l:2, kor:"이것", vie:"Cái này"}, {l:2, kor:"그것", vie:"Cái đó"}, {l:2, kor:"저것", vie:"Cái kia"},
+        
+        // BÀI 3
+        {l:3, kor:"가다", vie:"Đi"}, {l:3, kor:"오다", vie:"Đến"}, {l:3, kor:"자다", vie:"Ngủ"}, {l:3, kor:"먹다", vie:"Ăn"}, {l:3, kor:"마시다", vie:"Uống"}, {l:3, kor:"말하다", vie:"Nói"}, {l:3, kor:"읽다", vie:"Đọc"}, {l:3, kor:"듣다", vie:"Nghe"}, {l:3, kor:"보다", vie:"Xem"}, {l:3, kor:"일하다", vie:"Làm việc"}, {l:3, kor:"공부하다", vie:"Học"}, {l:3, kor:"운동하다", vie:"Tập thể dục"}, {l:3, kor:"쉬다", vie:"Nghỉ ngơi"}, {l:3, kor:"만나다", vie:"Gặp gỡ"}, {l:3, kor:"쇼핑하다", vie:"Mua sắm"}, {l:3, kor:"노래하다", vie:"Hát"}, {l:3, kor:"영화", vie:"Phim"}, {l:3, kor:"커피", vie:"Cà phê"}, {l:3, kor:"빵", vie:"Bánh mì"}, {l:3, kor:"음악", vie:"Âm nhạc"}, {l:3, kor:"신문", vie:"Báo"}, {l:3, kor:"친구", vie:"Bạn bè"}, {l:3, kor:"텔레비전", vie:"Tivi"}, {l:3, kor:"무엇", vie:"Cái gì"}, {l:3, kor:"어디", vie:"Ở đâu"}, {l:3, kor:"아주", vie:"Rất"},
+        
+        // BÀI 4
+        {l:4, kor:"월요일", vie:"Thứ 2"}, {l:4, kor:"화요일", vie:"Thứ 3"}, {l:4, kor:"수요일", vie:"Thứ 4"}, {l:4, kor:"목요일", vie:"Thứ 5"}, {l:4, kor:"금요일", vie:"Thứ 6"}, {l:4, kor:"토요일", vie:"Thứ 7"}, {l:4, kor:"일요일", vie:"Chủ nhật"}, {l:4, kor:"오늘", vie:"Hôm nay"}, {l:4, kor:"어제", vie:"Hôm qua"}, {l:4, kor:"내일", vie:"Ngày mai"}, {l:4, kor:"모레", vie:"Ngày kia"}, {l:4, kor:"지난주", vie:"Tuần trước"}, {l:4, kor:"이번주", vie:"Tuần này"}, {l:4, kor:"다음주", vie:"Tuần sau"}, {l:4, kor:"평일", vie:"Ngày thường"}, {l:4, kor:"주말", vie:"Cuối tuần"}, {l:4, kor:"생일", vie:"Sinh nhật"}, {l:4, kor:"시험", vie:"Kỳ thi"}, {l:4, kor:"휴가", vie:"Kỳ nghỉ"}, {l:4, kor:"언제", vie:"Khi nào"}, {l:4, kor:"월", vie:"Tháng"}, {l:4, kor:"일", vie:"Ngày"},
+        
+        // BÀI 5
+        {l:5, kor:"아침", vie:"Buổi sáng/Bữa sáng"}, {l:5, kor:"점심", vie:"Buổi trưa/Bữa trưa"}, {l:5, kor:"저녁", vie:"Buổi tối/Bữa tối"}, {l:5, kor:"오전", vie:"Sáng (AM)"}, {l:5, kor:"오후", vie:"Chiều (PM)"}, {l:5, kor:"시", vie:"Giờ"}, {l:5, kor:"분", vie:"Phút"}, {l:5, kor:"반", vie:"Rưỡi"}, {l:5, kor:"일어나다", vie:"Thức dậy"}, {l:5, kor:"씻다", vie:"Rửa (mặt/tay)"}, {l:5, kor:"요리하다", vie:"Nấu ăn"}, {l:5, kor:"공원", vie:"Công viên"}, {l:5, kor:"백화점", vie:"TT Thương mại"}, {l:5, kor:"카페", vie:"Quán Cafe"}, {l:5, kor:"시장", vie:"Chợ"}, {l:5, kor:"집", vie:"Nhà"}, {l:5, kor:"청소하다", vie:"Dọn dẹp"}, {l:5, kor:"회사", vie:"Công ty"}, {l:5, kor:"수영하다", vie:"Bơi lội"},
+        
+        // BÀI 6
+        {l:6, kor:"산책하다", vie:"Đi dạo"}, {l:6, kor:"등산하다", vie:"Leo núi"}, {l:6, kor:"여행하다", vie:"Du lịch"}, {l:6, kor:"영화를 보다", vie:"Xem phim"}, {l:6, kor:"음악을 듣다", vie:"Nghe nhạc"}, {l:6, kor:"외식하다", vie:"Ăn ngoài"}, {l:6, kor:"보통", vie:"Thông thường"}, {l:6, kor:"자주", vie:"Thường xuyên"}, {l:6, kor:"가끔", vie:"Thỉnh thoảng"}, {l:6, kor:"함께", vie:"Cùng nhau"}, {l:6, kor:"혼자", vie:"Một mình"}, {l:6, kor:"항상", vie:"Luôn luôn"}, {l:6, kor:"재미있다", vie:"Thú vị"}, {l:6, kor:"별로", vie:"Không...lắm"}, {l:6, kor:"전혀", vie:"Hoàn toàn không"},
+        
+        // BÀI 7
+        {l:7, kor:"사과", vie:"Táo"}, {l:7, kor:"오렌지", vie:"Cam"}, {l:7, kor:"우유", vie:"Sữa"}, {l:7, kor:"물", vie:"Nước"}, {l:7, kor:"주스", vie:"Nước ép"}, {l:7, kor:"콜라", vie:"Coke"}, {l:7, kor:"옷", vie:"Quần áo"}, {l:7, kor:"모자", vie:"Mũ"}, {l:7, kor:"구두", vie:"Giày da"}, {l:7, kor:"운동화", vie:"Giày thể thao"}, {l:7, kor:"우산", vie:"Dù"}, {l:7, kor:"안경", vie:"Kính"}, {l:7, kor:"비싸다", vie:"Đắt"}, {l:7, kor:"싸다", vie:"Rẻ"}, {l:7, kor:"많다", vie:"Nhiều"}, {l:7, kor:"적다", vie:"Ít"}, {l:7, kor:"크다", vie:"To/Lớn"}, {l:7, kor:"작다", vie:"Nhỏ"}, {l:7, kor:"돈", vie:"Tiền"}, {l:7, kor:"원", vie:"Đồng Won"}, {l:7, kor:"얼마", vie:"Bao nhiêu"},
+        
+        // BÀI 8
+        {l:8, kor:"비빔밥", vie:"Cơm trộn"}, {l:8, kor:"불고기", vie:"Thịt bò nướng"}, {l:8, kor:"김밥", vie:"Cơm cuộn"}, {l:8, kor:"냉면", vie:"Mì lạnh"}, {l:8, kor:"라면", vie:"Mì gói"}, {l:8, kor:"김치찌개", vie:"Canh Kim chi"}, {l:8, kor:"맛있다", vie:"Ngon"}, {l:8, kor:"맛없다", vie:"Dở"}, {l:8, kor:"맵다", vie:"Cay"}, {l:8, kor:"짜다", vie:"Mặn"}, {l:8, kor:"달다", vie:"Ngọt"}, {l:8, kor:"시다", vie:"Chua"}, {l:8, kor:"쓰다", vie:"Đắng/Viết/Dùng"}, {l:8, kor:"싱겁다", vie:"Nhạt"}, {l:8, kor:"시키다", vie:"Gọi món"}, {l:8, kor:"배가 고프다", vie:"Đói bụng"},
+        
+        // BÀI 9
+        {l:9, kor:"방", vie:"Phòng"}, {l:9, kor:"거실", vie:"Phòng khách"}, {l:9, kor:"부엌", vie:"Bếp"}, {l:9, kor:"침대", vie:"Giường"}, {l:9, kor:"냉장고", vie:"Tủ lạnh"}, {l:9, kor:"세탁기", vie:"Máy giặt"}, {l:9, kor:"텔레비전", vie:"Tivi"}, {l:9, kor:"위", vie:"Trên"}, {l:9, kor:"아래", vie:"Dưới"}, {l:9, kor:"앞", vie:"Trước"}, {l:9, kor:"뒤", vie:"Sau"}, {l:9, kor:"옆", vie:"Bên cạnh"}, {l:9, kor:"안", vie:"Trong"}, {l:9, kor:"밖", vie:"Ngoài"}, {l:9, kor:"오른쪽", vie:"Bên phải"}, {l:9, kor:"왼쪽", vie:"Bên trái"}, {l:9, kor:"사이", vie:"Giữa"},
+        
+        // BÀI 10
+        {l:10, kor:"가족", vie:"Gia đình"}, {l:10, kor:"아버지", vie:"Bố"}, {l:10, kor:"어머니", vie:"Mẹ"}, {l:10, kor:"할아버지", vie:"Ông"}, {l:10, kor:"할머니", vie:"Bà"}, {l:10, kor:"형", vie:"Anh (trai gọi)"}, {l:10, kor:"누나", vie:"Chị (trai gọi)"}, {l:10, kor:"오빠", vie:"Anh (gái gọi)"}, {l:10, kor:"언니", vie:"Chị (gái gọi)"}, {l:10, kor:"동생", vie:"Em"}, {l:10, kor:"남동생", vie:"Em trai"}, {l:10, kor:"여동생", vie:"Em gái"}, {l:10, kor:"딸", vie:"Con gái"}, {l:10, kor:"아들", vie:"Con trai"}, {l:10, kor:"친절하다", vie:"Thân thiện"}, {l:10, kor:"똑똑하다", vie:"Thông minh"}, {l:10, kor:"키가 크다", vie:"Cao"},
+        
+        // BÀI 11
+        {l:11, kor:"날씨", vie:"Thời tiết"}, {l:11, kor:"비", vie:"Mưa"}, {l:11, kor:"눈", vie:"Tuyết"}, {l:11, kor:"바람", vie:"Gió"}, {l:11, kor:"구름", vie:"Mây"}, {l:11, kor:"덥다", vie:"Nóng"}, {l:11, kor:"춥다", vie:"Lạnh"}, {l:11, kor:"따뜻하다", vie:"Ấm"}, {l:11, kor:"시원하다", vie:"Mát"}, {l:11, kor:"맑다", vie:"Nắng/Trong lành"}, {l:11, kor:"흐리다", vie:"U ám"}, {l:11, kor:"봄", vie:"Mùa Xuân"}, {l:11, kor:"여름", vie:"Mùa Hè"}, {l:11, kor:"가을", vie:"Mùa Thu"}, {l:11, kor:"겨울", vie:"Mùa Đông"},
+        
+        // BÀI 12
+        {l:12, kor:"전화", vie:"Điện thoại"}, {l:12, kor:"휴대폰", vie:"Di động"}, {l:12, kor:"전화번호", vie:"Số ĐT"}, {l:12, kor:"문자", vie:"Tin nhắn"}, {l:12, kor:"여보세요", vie:"Alo"}, {l:12, kor:"잠깐만요", vie:"Chờ chút"}, {l:12, kor:"바꾸다", vie:"Chuyển máy/Đổi"}, {l:12, kor:"통화 중", vie:"Đang bận máy"}, {l:12, kor:"우체국", vie:"Bưu điện"}, {l:12, kor:"소포", vie:"Bưu phẩm"}, {l:12, kor:"편지", vie:"Thư"}, {l:12, kor:"보내다", vie:"Gửi"},
+        
+        // BÀI 13
+        {l:13, kor:"버스", vie:"Xe buýt"}, {l:13, kor:"지하철", vie:"Tàu điện ngầm"}, {l:13, kor:"택시", vie:"Taxi"}, {l:13, kor:"자전거", vie:"Xe đạp"}, {l:13, kor:"비행기", vie:"Máy bay"}, {l:13, kor:"배", vie:"Tàu thủy/Bụng/Lê"}, {l:13, kor:"기차", vie:"Tàu hỏa"}, {l:13, kor:"타다", vie:"Đi/Lên (xe)"}, {l:13, kor:"내리다", vie:"Xuống (xe)"}, {l:13, kor:"갈아타다", vie:"Đổi xe"}, {l:13, kor:"가깝다", vie:"Gần"}, {l:13, kor:"멀다", vie:"Xa"}, {l:13, kor:"시간이 걸리다", vie:"Mất thời gian"},
+        
+        // BÀI 14
+        {l:14, kor:"취미", vie:"Sở thích"}, {l:14, kor:"축구하다", vie:"Đá bóng"}, {l:14, kor:"테니스를 치다", vie:"Chơi Tennis"}, {l:14, kor:"피아노를 치다", vie:"Chơi Piano"}, {l:14, kor:"사진을 찍다", vie:"Chụp ảnh"}, {l:14, kor:"그림을 그리다", vie:"Vẽ tranh"}, {l:14, kor:"기타를 치다", vie:"Chơi Guitar"}, {l:14, kor:"잘하다", vie:"Giỏi"}, {l:14, kor:"못하다", vie:"Kém"}, {l:14, kor:"좋아하다", vie:"Thích"}, {l:14, kor:"싫어하다", vie:"Ghét"},
+        
+        // BÀI 15
+        {l:15, kor:"바다", vie:"Biển"}, {l:15, kor:"산", vie:"Núi"}, {l:15, kor:"섬", vie:"Đảo"}, {l:15, kor:"강", vie:"Sông"}, {l:15, kor:"박물관", vie:"Bảo tàng"}, {l:15, kor:"유적지", vie:"Di tích lịch sử"}, {l:15, kor:"여행지", vie:"Địa điểm du lịch"}, {l:15, kor:"준비하다", vie:"Chuẩn bị"}, {l:15, kor:"예약하다", vie:"Đặt trước"}, {l:15, kor:"방학", vie:"Kỳ nghỉ (học sinh)"}, {l:15, kor:"기념품을 사다", vie:"Mua quà lưu niệm"}
+    ];
 
-        questionContainer.appendChild(head);
+    let currentWords = [];
+    let currentIndex = 0;
 
-        question.results.forEach((answer, index) => {
-          const answerDiv = document.createElement("div");
-          answerDiv.setAttribute("data-result", answer.idResult);
-          answerDiv.classList.add("answer");
-          answerDiv.textContent = answer.value;
-          questionContainer.appendChild(answerDiv);
-        });
-
-        const answerItem = document.querySelectorAll(".answer");
-        const indexSelected = selectList.findIndex(
-          (item) => item?.id === question.id
-        );
-
-        // Hiển thị lại câu trả lời nếu đã có
-        if(indexSelected > -1) {
-            checkAnswer(
-                answerItem,
-                questionList,
-                currentQuestionIndex,
-                selectList[indexSelected].chooseId
-            );
+    function initSelect() {
+        const select = document.getElementById('lessonSelect');
+        for (let i = 1; i <= 15; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = `Bài ${i}: ${titles[i]}`;
+            select.appendChild(opt);
         }
+        initSession();
+    }
 
-
-        answerItem.forEach((as, index) => {
-          as.addEventListener("click", (e) => {
-            incorrectList = incorrectList.filter((ic) => ic?.id !== question?.id);
-            const selected = selectList.some((item) => item.id === question.id);
-            if (incorrectList.length === 0 && makeAgainMode) makeAgainMode = false;
-            
-            if (!selected) {
-              const selectData = {};
-              const statusResult = +e.target.dataset.result === +question.idCorrectResult;
-              selectData.id = question.id;
-              selectData.idCorrectResult = question.idCorrectResult;
-              selectData.chooseId = +e.target.dataset.result;
-              selectData.isCorrect = statusResult;
-              selectList.push(selectData);
-              e.target.classList.add("active");
-              checkAnswer(
-                answerItem,
-                questionList,
-                currentQuestionIndex,
-                e.target.dataset.result
-              );
-              
-              // === CHỈNH SỬA: CẬP NHẬT LẠI MỤC LỤC SAU KHI TRẢ LỜI ===
-              renderQuestionIndex(); 
-              // === KẾT THÚC CHỈNH SỬA ===
-
-              autoPlayTimeout = setTimeout(() => handleNextQuestion(nextBtn), 1500);
-            }
-          });
-        });
-      }
-
-      function displayResult() {
-        questionContainer.innerHTML = ''; // Xóa câu hỏi cuối cùng
-        let totalCorrect = 0;
-        let totalScore = 0;
-        let avgScore = 10 / questionList.length;
-        const resultContainer = document.getElementById("result");
-        if (selectList.length < questionList.length) {
-            // Có thể thêm thông báo chưa hoàn thành ở đây nếu muốn
+    function initSession() {
+        const lesson = document.getElementById('lessonSelect').value;
+        if (lesson === 'all') {
+            currentWords = [...vocab].sort(() => Math.random() - 0.5);
+            document.getElementById('lessonTitle').innerText = "Tất cả bài học (Ngẫu nhiên)";
+        } else {
+            currentWords = vocab.filter(w => w.l == lesson).sort(() => Math.random() - 0.5);
+            document.getElementById('lessonTitle').innerText = `Bài ${lesson}: ${titles[lesson]}`;
         }
-        selectList.forEach((ans) => {
-          if (ans.isCorrect) totalCorrect++;
-        });
-        totalScore = totalCorrect * avgScore;
-        resultContainer.innerHTML = `
-            <h2>Kết quả</h2>
-            <span>Tổng số câu đúng: <strong>${totalCorrect}/${questionList.length}</strong></span>
-            <p>Bạn đã hoàn thành bài thi!<br>Điểm của bạn là:
-                <strong>${totalScore.toFixed(1)} / 10</strong>
-            </p>
-        `;
-      }
-      
-      // Hiển thị câu hỏi đầu tiên
-      displayQuestion(questionList[currentQuestionIndex]);
-    </script>
-  </body>
+        currentIndex = 0;
+        updateWord();
+    }
+
+    function updateWord() {
+        if (currentWords.length === 0) return;
+        const word = currentWords[currentIndex];
+        document.getElementById('korWord').innerText = word.kor;
+        document.getElementById('vieWord').innerText = word.vie;
+        document.getElementById('vieWord').classList.remove('visible');
+        
+        document.getElementById('currentCount').innerText = currentIndex + 1;
+        document.getElementById('totalCount').innerText = currentWords.length;
+        
+        const progress = ((currentIndex + 1) / currentWords.length) * 100;
+        document.getElementById('progress-fill').style.width = progress + "%";
+    }
+
+    function showMeaning() {
+        document.getElementById('vieWord').classList.add('visible');
+    }
+
+    function nextWord() {
+        if (currentIndex < currentWords.length - 1) {
+            currentIndex++;
+            updateWord();
+        } else {
+            alert("Hoàn thành bài học! Chúng ta sẽ bắt đầu lại.");
+            initSession();
+        }
+    }
+
+    function playAudio() {
+        const text = currentWords[currentIndex].kor;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ko-KR';
+        msg.rate = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') { e.preventDefault(); showMeaning(); }
+        if (e.code === 'ArrowRight') nextWord();
+        if (e.code === 'KeyV') playAudio();
+    });
+
+    window.onload = initSelect;
+</script>
+
+</body>
 </html>
+
